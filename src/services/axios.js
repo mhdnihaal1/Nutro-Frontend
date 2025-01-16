@@ -12,8 +12,11 @@ Api.interceptors.response.use(
     (Response) => Response,
     (error) => {
         if (error.response) {
+            console.log('not ready')
+
             return errorHandle(error);
         } else {
+
             console.log("axios error:", error);
         }
         return Promise.reject(error)

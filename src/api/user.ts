@@ -1,5 +1,5 @@
 import Api from "../services/axios";
-import userRoutes from "../services/endPoints/userEndpoitns";
+import userRoute from "../services/endPoints/userEndpoitns";
 import errorHandle from "./error";
 
 interface userFormData {
@@ -22,10 +22,11 @@ interface ChangePasswordResponse {
 
 export const signup = async (userData: userFormData) => {
   try {
-    const response = await Api.post(userRoutes.signup, userData);
+    const response = await Api.post(userRoute.signup, userData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
-    return errorHandle(err);
+    console.log('not ready')
+    return errorHandle(err );
   }
 };

@@ -68,11 +68,9 @@ const UserSignup = () => {
     e: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     try {
-      console.log(1)
 
       e.preventDefault();
       const isValid = validateForm();
-console.log(name,email,phone)
       if (isValid) {
         const userData = {
           name: name,
@@ -80,10 +78,8 @@ console.log(name,email,phone)
           phone: phone,
           password: password,
         };
-        console.log(userData, "from");
 
         const response = await signup(userData);
-
         if (response) {
           toast.success(response.data.message);
           navigate("/user/otp", {
@@ -94,9 +90,13 @@ console.log(name,email,phone)
               phone: phone,
             },
           });
+        }else{
+          console.log(response)
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
