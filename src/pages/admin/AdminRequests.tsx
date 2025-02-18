@@ -1,130 +1,139 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { adminLogout } from "../../redux/slices/adminSlice";
+import { getOrders } from "../../api/admin";
+import AdminSideBar from "../../components/admin/AdminSideBar";
+
+
+
+interface IAgent  {
+    name: string;
+    phone: number;
+    email: string;
+    password: string;
+    agentStatus:boolean;
+};
+  
+  interface IUser  {
+    name: string;
+    phone: number;
+    email: string;
+    password: string;
+    userStatus:boolean;
+ 
+  }
+interface IAddres {
+
+  _id:object;
+  nearBy: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+
+
+}
+interface IOrderItem {
+  clothItemId:string;
+  name: string;
+  category: string;
+  quantity: number;
+  service: 'wash' | 'dryClean' | 'iron';
+  unitPrice: number;
+}
+interface IOrder extends Document {
+  userId:IUser;
+  clothItems: IOrderItem[]; 
+  addres: IAddres[];
+  status: "orderPlaced" | "orderConfirmed" | "agentAccepted" | "readyForPickup" | "itemOnLaundry" | "itemPacked" | "outForDelivery" | "delivered" | "cancelled";
+  totalPrice: number;
+  deliveryMode: string;
+  agentId: IAgent;
+  createdAt: Date;
+  updatedAt: Date;
+  }
 
 const AdminRequests = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [agents, setAgents] = useState([
-      { id: 1, name: "Agent A", email: "agentA@example.com" },
-      { id: 2, name: "Agent B", email: "agentB@example.com" },
-    ]);
-  
-    const toggleModal = () => {
-      setIsModalOpen(!isModalOpen);
-    };
-  
-    const handleAddAgent = (event: React.FormEvent) => {
-      event.preventDefault();
-      const formData = new FormData(event.target as HTMLFormElement);
-  
-      const name = formData.get("name") as string | null;
-      const email = formData.get("email") as string | null;
-      if (name && email) {
-        const newAgent = {
-          id: agents.length + 1,
-          name: name,
-          email: email,
-        };
-  
-        setAgents([...agents, newAgent]);
-        toggleModal();
-      } else {
-        alert("Please fill in all fields.");
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+
+    const [ Orders , setOrders ] = useState<IOrder[]>([])
+   
+
+    useEffect(() => {
+
+      const fetchData = async () => {
+
+        const order = await getOrders()
+        console.log(order)
+
+        if(order?.data){
+          console.log(order?.data)
+          const orde = order?.data
+         setOrders(Array.isArray(orde) ? orde : [])
+        }       
+
       }
-    };
-  
+      fetchData()
+    },[])
+
     return (
       <div className="min-h-screen bg-black text-white flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col">
-          <div className="p-6 text-2xl font-bold border-b border-gray-700">
-            Admin Panel
-          </div>
-          <nav className="flex-grow p-4 space-y-4">
-          <a
-              href="Dashboard"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Dashboard
-            </a>
-            <a
-              href="Requests"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Requests
-            </a>
-            <a
-              href="Users"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Users
-            </a>
-            <a
-              href="agents"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Agents
-            </a>
-            <a
-              href="Items"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Items
-            </a>
-            <a
-              href="Offers"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Offers
-            </a>
-            <a
-              href="Services"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Services
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Settings
-            </a>
-          </nav>
-          <div className="p-4 border-t border-gray-700">
-            <button className="w-full bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700">
-              Logout
-            </button>
-          </div>
-        </aside>
-  
-        {/* Main Content */}
-        <div className="flex-grow p-8">
-          <h1 className="text-3xl font-bold mb-8">Users Requests</h1>
-  
-        
-  
-          {/* Agents List */}
-          <div className="bg-gray-800 p-6 rounded-lg">
-            {agents.length === 0 ? (
-              <p className="text-gray-400">No agents available.</p>
-            ) : (
-              <ul className="space-y-4">
-                {agents.map((agent) => (
+      {/* Sidebar */}
+      <AdminSideBar/>
+
+      {/* Main Content */}
+      <div className="flex-grow p-8 ml-64">
+        <h1 className="text-3xl font-bold mb-8">Users Orders</h1>
+
+        {/* Orders List in Row Box Style */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+                <span className="font-semibold text-lg">User Name</span>
+                <span className="font-semibold text-lg">Agent Name</span>
+                <span className="font-semibold text-lg">DeliveryMode</span>
+                <span className="font-semibold text-lg">Total Amount</span>
+                <span className="font-semibold text-lg"> Order Status </span>
+              </div>
+
+        <ul className="space-y-4">
+          {Orders.length === 0 ? (
+            <p className="text-gray-400">No orders available.</p>
+          ) : (
+            Orders.map((order,index) => (
+              <li
+                    key={index}
+                    className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+                    >
+                <p className="text-gray-400 w-[10vh]">{order.userId?.name || "N/A"}</p>
+                <p className="text-gray-400">{order.agentId?.name || "Not Assigned"}</p>
+                <p className="text-blue-400">{order.deliveryMode}</p>
+                <p className="text-green-400 font-semibold">${order.totalPrice}</p>
+                <p className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-white"> {order.status  || "Not Assigned" }</p>
+               </li>
+            ))
+          )}
+        </ul>
+
+                {/* {User.map((user,index) => (
                   <li
-                    key={agent.id}
-                    className="bg-gray-900 p-4 rounded-md flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="font-semibold">{agent.name}</p>
-                      <p className="text-gray-400 text-sm">{agent.email}</p>
-                    </div>
+                    key={index}
+                    className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+                    >
+                    {/* Name and Email in a Row */}
+                    {/* <p className="text-gray-400">{user.name}</p>
+                    <p className="text-gray-400">{user.email}</p>
+                    <p className="text-gray-400">{user.phone}</p>
+                    <p className="text-gray-400">{user?.userStatus || 'N/A'}</p>
                   </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                ))} */} 
         </div>
+      </div>
+    </div>
   
         
-      </div>
     );
   };
 

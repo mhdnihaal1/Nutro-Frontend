@@ -15,10 +15,9 @@ interface Errors {
 }
 
 const UserSignup = () => {
-  console.log('signup')
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>(""); 
+  const [password, setPassword] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -27,16 +26,13 @@ const UserSignup = () => {
   const [errors, setErrors] = useState<Errors>({});
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
   const handleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
-
   const validateForm = () => {
     const newErrors: Errors = {};
 
@@ -59,7 +55,6 @@ const UserSignup = () => {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -68,7 +63,6 @@ const UserSignup = () => {
     e: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     try {
-
       e.preventDefault();
       const isValid = validateForm();
       if (isValid) {
@@ -80,7 +74,7 @@ const UserSignup = () => {
         };
 
         const response = await signup(userData);
-        if (response) {
+        if (response?.data?.success == true) {
           toast.success(response.data.message);
           navigate("/user/otp", {
             state: {
@@ -90,12 +84,12 @@ const UserSignup = () => {
               phone: phone,
             },
           });
-        }else{
-          console.log(response)
+        } else {
+          console.log(response);
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -105,13 +99,8 @@ const UserSignup = () => {
         <h1 className="text-2xl font-bold text-center mb-6 text-blue-600">
           Create an Account
         </h1>
-        <form 
-        onSubmit={submitHandler}
-        className="max-w-md mx-auto space-y-6">
-          
-          {/* Name Input */}
+        <form onSubmit={submitHandler} className="max-w-md mx-auto space-y-6">
           <div className="mb-4">
-         
             <input
               type="text"
               id="name"
@@ -123,9 +112,7 @@ const UserSignup = () => {
             />
           </div>
 
-          {/* Email Input */}
           <div className="mb-4">
-           
             <input
               type="email"
               id="email"
@@ -138,21 +125,18 @@ const UserSignup = () => {
           </div>
 
           <div className="mb-4">
-           
-           <input
-             type="phone"
-             id="phone"
-             onChange={(e) => setPhone(e.target.value)}
-             value={phone}
-             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-             placeholder="Enter your number"
-             required
-           />
-         </div>
+            <input
+              type="phone"
+              id="phone"
+              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter your number"
+              required
+            />
+          </div>
 
-          {/* Password Input */}
           <div className="mb-4">
-          
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -173,9 +157,7 @@ const UserSignup = () => {
             </div>
           </div>
 
-          {/* Confirm Password Input */}
           <div className="mb-4">
-           
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -202,7 +184,6 @@ const UserSignup = () => {
             </p>
           )}
 
-          {/* Signup Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
@@ -211,7 +192,6 @@ const UserSignup = () => {
           </button>
         </form>
 
-        {/* Already have an account Link */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}

@@ -1,4 +1,9 @@
 import React,{useState} from 'react'
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { adminLogout } from "../../redux/slices/adminSlice";
+import AdminSideBar from "../../components/admin/AdminSideBar";
+
 
 const AdminServices = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -6,7 +11,8 @@ const AdminServices = () => {
       { id: 1, name: "Service A", email: "ServiceA@example.com" , mobile: 3423233423 },
       { id: 2, name: "Service B", email: "ServiceB@example.com" , mobile: 3423233423 },
     ]);
-  
+    const navigate = useNavigate()
+    const dispatch = useDispatch() 
     const toggleModal = () => {
       setIsModalOpen(!isModalOpen);
     };
@@ -32,74 +38,17 @@ const AdminServices = () => {
         alert("Please fill in all fields.");
       }
     };
+
   
     return (
       <div className="min-h-screen bg-black text-white flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col">
-          <div className="p-6 text-2xl font-bold border-b border-gray-700">
-            Admin Panel
-          </div>
-          <nav className="flex-grow p-4 space-y-4">
-          <a
-              href="Dashboard"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Dashboard
-            </a>
-            <a
-              href="Requests"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Requests
-            </a>
-            <a
-              href="Users"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Users
-            </a>
-            <a
-              href="agents"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Agents
-            </a>
-            <a
-              href="Items"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Items
-            </a>
-            <a
-              href="Offers"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Offers
-            </a>
-            <a
-              href="Services"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Services
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Settings
-            </a>
-          </nav>
-          <div className="p-4 border-t border-gray-700">
-            <button className="w-full bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700">
-              Logout
-            </button>
-          </div>
-        </aside>
-  
-        {/* Main Content */}
-        <div className="flex-grow p-8">
-          <h1 className="text-3xl font-bold mb-8">Manage Services</h1>
+      {/* Sidebar */}
+      <AdminSideBar/>
+
+
+      {/* Main Content */}
+      <div className="flex-grow p-8 ml-64">
+      <h1 className="text-3xl font-bold mb-8">Manage Services</h1>
   
           {/* Add Agent Button */}
           <button
@@ -110,9 +59,9 @@ const AdminServices = () => {
           </button>
   
           {/* Agents List */}
-          <div className="bg-gray-800 p-6 rounded-lg">
-          <div className="flex justify-around items-center mb-4">
-            <h2 className="text-xl font-semibold">Service Name</h2>
+          <div className="space-y-4">
+          <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+          <h2 className="text-xl font-semibold">Service Name</h2>
             <h2 className="text-xl font-semibold">Description</h2>
             <h2 className="text-xl font-semibold">Features</h2>
           </div>
@@ -125,12 +74,12 @@ const AdminServices = () => {
                 {service.map((service) => (
                   <li
                     key={service.id}
-                    className="bg-gray-900 p-4 rounded-md flex justify-around items-center"
+                    className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
                   >
                     {/* Name and Email in a Row */}
-                    <p className="font-semibold text-white">{service.name}</p>
-                    <p className="text-gray-400">{service.email}</p>
-                    <p className="font-semibold text-white">{service.mobile}</p>
+                    <p className="text-gray-400 w-40 truncate">{service.name}</p>
+                    <p className="text-gray-400 w-40 truncate ml-[55vh]">{service.email}</p>
+                    <p className="text-gray-400 w-40 truncate ml-[40vh]">{service.mobile}</p>
 
                   </li>
                 ))}

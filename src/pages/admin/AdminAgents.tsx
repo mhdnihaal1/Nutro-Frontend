@@ -1,197 +1,215 @@
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
+import {
+  addAgent,
+  getAgents,
+  getMaps,
+  agentStatus,
+  editAgent,
+} from "../../api/admin";
+import AddAgentModal from "../../components/admin/AddAgentModal";
+import EditAgentModal from "../../components/admin/EditAgentModal";
+import AdminSideBar from "../../components/admin/AdminSideBar";
+import { Toaster, toast } from "react-hot-toast";
 
-const AdminAgents = () => {
+interface Errors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+}
+
+interface Agent {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  agentStatus: boolean;
+  map: string;
+}
+
+
+const AdminAgents: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [agents, setAgents] = useState([
-    { id: 1, name: "Agent A", email: "agentA@example.com"  , mobile: 3423233423 },
-    { id: 2, name: "Agent B", email: "agentB@example.com"  , mobile: 3423233423 },
-  ]);
+  const [iseditModalOpen, setIseditModalOpen] = useState(false);
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const [editId, setEditId] = useState("");
+
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  const edittoggleModal = (_id: string) => {
+    setIseditModalOpen(!iseditModalOpen);
+    setEditId(_id);
   };
 
-  const handleAddAgent = (event: React.FormEvent) => {
-    event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const agents = await getAgents();
+        const Maps = await getMaps();
 
-    const name = formData.get("name") as string | null;
-    const email = formData.get("email") as string | null;
-    const mobile = formData.get("mobile") as number | null;
-    if (name && email&&mobile) {
-      const newAgent = {
-        id: agents.length + 1,
-        name: name,
-        email: email,
-        mobile:mobile
-      };
+        if (agents?.data && Maps?.data) {
+          setAgents(
+            Array.isArray(agents?.data) ? (agents?.data as Agent[]) : []
+          );
+          setLoading(false);
+        }
+      } catch (err) {
+        setError("Failed to fetch agents");
+        setLoading(false);
+      }
+    };
 
-      setAgents([...agents, newAgent]);
-      toggleModal();
-    } else {
-      alert("Please fill in all fields.");
+    fetchAgents();
+  }, []);
+
+  const handleSaveAgent = async (agentData: {
+    name: string;
+    email: string;
+    password: string;
+    phone: string;
+    map: string;
+  }) => {
+    try {
+      const response = await addAgent(agentData);
+      if (response?.data?.success) {
+        toast.success("Agent added successfully");
+        setAgents((prev) => [...prev, response?.data?.data?.data]);
+
+        setIsModalOpen(false);
+      } else {
+        toast.error(response?.data?.data?.message || "Failed to add agent");
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+  const handleEditAgent = async (agentDatas: {name: string;email: string;password: string;phone: string;map: string;}) => {
+    try {
+      const _id = editId;
+      const { name, email, password, phone, map } = agentDatas;
+      const Datas = { _id, name, email, password, phone, map };
+
+      const response = await editAgent(Datas);
+      if (response?.data) {
+        toast.success("Agent edited successfully");
+        setAgents((prev) =>
+          prev.map((agent) => (agent._id == _id ? response.data : agent))
+        );
+
+        setIseditModalOpen(false);
+      } else {
+        toast.error(response?.data?.data?.message || "Failed to edit agent");
+        setIseditModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
+  const handlestatus = async (agentId: string) => {
+    try {
+      const res = await agentStatus(agentId);
+      console.log(res)
+      if (res) {
+        setAgents((prev) => prev.map((agent) => (agent._id == agentId ? res?.data : agent)));
+
+        toast.success("Agent status changed successfully.");
+      } else {
+        toast.error("Failed to delete map.");
+      }
+    } catch (error) {
+      console.error("Error deleting map:", error);
+      toast.error("Something went wrong while agent status changing.");
     }
   };
 
   return (
     <div className="min-h-screen bg-black text-white flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col">
-        <div className="p-6 text-2xl font-bold border-b border-gray-700">
-          Admin Panel
-        </div>
-        <nav className="flex-grow p-4 space-y-4">
-        <a
-              href="Dashboard"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Dashboard
-            </a>
-            <a
-              href="Requests"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Requests
-            </a>
-            <a
-              href="Users"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Users
-            </a>
-            <a
-              href="agents"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Agents
-            </a>
-            <a
-              href="Items"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Items
-            </a>
-            <a
-              href="Offers"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Offers
-            </a>
-            <a
-              href="Services"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Services
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Settings
-            </a>
-        </nav>
-        <div className="p-4 border-t border-gray-700">
-          <button className="w-full bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700">
-            Logout
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-grow p-8">
+      <AdminSideBar />
+      <div className="flex-grow p-8 ml-64">
         <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
-
-        {/* Add Agent Button */}
         <button
           onClick={toggleModal}
-          className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
+          className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 mb-8"
         >
           Add Agent
         </button>
-
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <div className="flex justify-around items-center mb-4">
-            <h2 className="text-xl font-semibold">Name</h2>
-            <h2 className="text-xl font-semibold">Email</h2>
-            <h2 className="text-xl font-semibold">Mobile</h2>
-          </div>
-
-          <div>
+        {loading ? (
+          <p className="text-center text-gray-400">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+              <h2 className="text-xl font-semibold">Name</h2>
+              <h2 className="text-xl font-semibold">Email</h2>
+              <h2 className="text-xl font-semibold">Mobile</h2>
+              <h2 className="text-xl font-semibold">User Status</h2>
+              <h2 className="text-xl font-semibold mr-10">Action</h2>
+            </div>
             {agents.length === 0 ? (
-              <p className="text-gray-400">No users available.</p>
+              <p className="text-gray-400">No agents available.</p>
             ) : (
               <ul className="space-y-4">
-                {agents.map((agent) => (
+                {agents.map((agent, index) => (
                   <li
-                    key={agent.id}
-                    className="bg-gray-900 p-4 rounded-md flex justify-around items-center"
+                    key={index}
+                    className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
                   >
-                    {/* Name and Email in a Row */}
-                    <p className="font-semibold text-white">{agent.name}</p>
-                    <p className="text-gray-400">{agent.email}</p>
-                    <p className="font-semibold text-white">{agent.mobile}</p>
+                    <p className="text-gray-400 w-40 truncate">
+                      {agent?.name || "N/A"}
+                    </p>
+                    <p className="text-gray-400 w-80 truncate ml-[10vh] ">
+                      {agent?.email || "Not Assigned"}
+                    </p>
+                    <p className="text-blue-400 w-32 text-center pr-10 ">
+                      {agent?.phone || "N/A"}
+                    </p>
+                    <p className="text-green-400 font-semibold w-24 text-center  ml-[18vh]">
+                      {agent?.agentStatus == true ? "inActive" : "Active"}
+                    </p>
+                    <button
+  className={`px-3 py-1 ml-[20vh] rounded-lg text-sm font-semibold transition duration-300 text-white 
+  ${agent?.agentStatus ? "bg-green-600 hover:bg-green-500" : "bg-red-600 hover:bg-red-500"}`}
+  onClick={() => handlestatus(agent._id)}
+>
+  {agent?.agentStatus ? "Unblock" : "Block"}
+</button>
 
-
+                    
+                    <button
+                      onClick={() => edittoggleModal(agent._id)}
+                      className="px-3 py-1 bg-blue-600 text-white mr-[0vh] rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
+                    >
+                      Edit
+                    </button>
                   </li>
                 ))}
               </ul>
             )}
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Add Agent Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Add New Agent</h2>
-            <form onSubmit={handleAddAgent}>
-              <div className="mb-4">
-                <label className="block text-gray-400 text-sm mb-2">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-400 text-sm mb-2">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-400 text-sm mb-2">Mobile</label>
-                <input
-                  type="number"
-                  name="mobile"
-                  required
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                />
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={toggleModal}
-                  className="bg-gray-600 px-6 py-2 rounded-lg hover:bg-gray-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700"
-                >
-                  Add
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <EditAgentModal
+        iseditOpen={iseditModalOpen}
+        oneditClose={() => setIseditModalOpen(false)}
+        agentDatas={handleEditAgent}
+      />
+
+      <AddAgentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        agentData={handleSaveAgent}
+      />
     </div>
   );
 };

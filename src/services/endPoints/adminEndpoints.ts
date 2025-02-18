@@ -1,0 +1,27 @@
+const adminRoutes = {
+  login: "/admin/login",
+  addAgent: "/admin/addAgent",
+  getAgents: "/admin/getAgents",
+  getMaps: "/admin/getMaps",
+  getItems: "/admin/getItems",
+  addClothItem: "/admin/addClothItem",
+  getOffers: "/admin/getOffers",
+  addOffers: "/admin/addOffers",
+  getOrders: "/admin/getOrders",
+  getUsers: "/admin/getUsers",
+  addMap: "/admin/addMap",
+  deleteMap: "/admin/deleteMap",
+  editMap: "/admin/editMap",
+  deleteItem: "/admin/deleteItem",
+  deleteOffer: "/admin/deleteOffer",
+  UserStatus: "/admin/UserStatus",
+  agentStatus: "/admin/agentStatus",
+  editAgent: "/admin/editAgent",
+  editClothItem: "/admin/editClothItem",
+  editOffer: "/admin/editOffer",
+  getConcerns: "/admin/getConcerns",
+  sendReply: "/admin/sendReply",
+  deleteConcern: "/admin/deleteConcern",
+};
+
+export default adminRoutes;

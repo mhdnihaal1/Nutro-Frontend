@@ -1,184 +1,234 @@
-import React,{useState} from 'react'
+import React, { FormEvent, useEffect, useState } from "react";
+import { getOffers, addOffer , deleteOffer , editOffer} from "../../api/admin";
+import { Toaster, toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import AdminSideBar from "../../components/admin/AdminSideBar";
+import AddOfferModal from "../../components/admin/AddOfferModal";
+import EditOfferModal from "../../components/admin/EditOfferModal";
+
+interface IOffer {
+  _id: string;
+  name: string;
+  price: number;
+  expirationDate: Date;
+  isActive: boolean;
+
+}
+
+interface Errors {
+  name?: string;
+  price?: string;
+  expirationDate?: string;
+  isActive?: string;
+}
 
 const AdminOffers = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [offers, setOffers] = useState([
-      { id: 1, name: "offer A", email: "offersA@example.com" },
-      { id: 2, name: "offer B", email: "offersB@example.com" },
-    ]);
-  
-    const toggleModal = () => {
-      setIsModalOpen(!isModalOpen);
-    };
-  
-    const handleAddAgent = (event: React.FormEvent) => {
-      event.preventDefault();
-      const formData = new FormData(event.target as HTMLFormElement);
-  
-      const name = formData.get("name") as string | null;
-      const email = formData.get("email") as string | null;
-      if (name && email) {
-        const newOffer = {
-          id: offers.length + 1,
-          name: name,
-          email: email,
-        };
-  
-        setOffers([...offers, newOffer]);
-        toggleModal();
-      } else {
-        alert("Please fill in all fields.");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [iseditModalOpen, setIseditModalOpen] = useState(false);
+  const [editId , setEditId] = useState('')
+
+  const [offer, setOffer] = useState<IOffer[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<number>(0); 
+  const [expirationDate, setExpirationDate] = useState<string>("");
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Errors>({});
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+
+  const toggliseModal = () => {
+    setIseditModalOpen(!iseditModalOpen);
+  };
+  const edittoggleModal = (_id:string) => {
+    console.log(123)
+    setIseditModalOpen(!iseditModalOpen);
+    setEditId(_id)
+  };
+
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const offers = await getOffers();
+        setOffer(Array.isArray(offers?.data) ? (offers?.data as IOffer[]) : []);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch offers");
+        setLoading(false);
       }
     };
-  
-    return (
-      <div className="min-h-screen bg-black text-white flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col">
-          <div className="p-6 text-2xl font-bold border-b border-gray-700">
-            Admin Panel
-          </div>
-          <nav className="flex-grow p-4 space-y-4">
-          <a
-              href="Dashboard"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Dashboard
-            </a>
-            <a
-              href="Requests"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Requests
-            </a>
-            <a
-              href="Users"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Users
-            </a>
-            <a
-              href="agents"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Agents
-            </a>
-            <a
-              href="Items"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Items
-            </a>
-            <a
-              href="Offers"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Offers
-            </a>
-            <a
-              href="Services"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Services
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Settings
-            </a>
-          </nav>
-          <div className="p-4 border-t border-gray-700">
-            <button className="w-full bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700">
-              Logout
-            </button>
-          </div>
-        </aside>
-  
-        {/* Main Content */}
-        <div className="flex-grow p-8">
-          <h1 className="text-3xl font-bold mb-8">Manage Offers</h1>
-  
-          {/* Add Agent Button */}
-          <button
-            onClick={toggleModal}
-            className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
-          >
-            Add Offer
-          </button>
-  
-          <div className="bg-gray-800 p-6 rounded-lg">
-          <div className="flex justify-around items-center mb-4">
-            <h2 className="text-xl font-semibold">Offer Name</h2>
+
+    fetchOffers();
+  }, []);
+
+ 
+
+  const handleSaveItem = async (offerData: {
+    name: string;
+    price: number;
+    expirationDate: Date;
+    isActive: boolean;
+  }) => {
+    try {
+
+      
+      const response = await addOffer(offerData);
+
+      if (response?.data?.success) {
+        toast.success("Offer added successfully");
+        setOffer((prev) => [...prev, response?.data?.data]);
+        setIsModalOpen(false);
+
+      } else {
+        setIsModalOpen(false);
+        toast.error(response?.data?.message || "Failed to add offer");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
+  const handleEditItem = async (offerData: {
+    name: string;
+    price: number;
+    expirationDate: Date;
+    isActive: boolean;
+  }) =>{
+
+    try {
+    
+      const _id = editId;
+      const { name, price, expirationDate, isActive } = offerData;
+      const Datas = { _id,name, price, expirationDate, isActive  };
+
+      const response = await editOffer(Datas);
+
+      if (response?.data) {
+        toast.success("Offer edited successfully");
+        setOffer((prev) =>  prev.map((offer) =>(offer._id === editId ? response.data : offer)));
+        setIseditModalOpen(false);
+
+      } else {
+        toast.error(response?.data?.message || "Failed to edit offer");
+        setIseditModalOpen(false);
+
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
+
+  const handleDelete = async (_id: string) => {
+    try {
+      console.log(_id)
+      const res = await deleteOffer(_id); 
+      if (res) {
+        console.log(res)
+        setOffer((prev) => prev.filter((mapItem) => mapItem._id !== _id));
+        toast.success("Map deleted successfully.")
+
+      } else {
+        toast.error("Failed to delete map.")
+      }
+    } catch (error) {
+      // console.error("Error deleting map:", error);
+      toast.error("Something went wrong while deleting the map.")
+    }
+  };
+
+
+
+
+  return (
+    <div className="min-h-screen bg-black text-white flex">
+    {/* Sidebar */}
+    <AdminSideBar/>
+
+
+    {/* Main Content */}
+    <div className="flex-grow p-8 ml-64">
+    <h1 className="text-3xl font-bold mb-8">Manage Offers</h1>
+
+        {/* Add Offer Button */}
+        <button
+          onClick={toggleModal}
+          className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
+        >
+          Add Offer
+        </button>
+
+        <div className="space-y-4">
+        <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+           <h2 className="text-xl font-semibold">Offer Name</h2>
             <h2 className="text-xl font-semibold">Offer Price</h2>
+            <h2 className="text-xl font-semibold">Expiration Date</h2>
+            <h2 className="text-xl text-center font-semibold ">isActive</h2>
+            <h2 className="text-xl text-center font-semibold mr-[10vh]">Action</h2>
           </div>
 
-          <div>
-            {offers.length === 0 ? (
-              <p className="text-gray-400">No users available.</p>
+            {offer.length === 0 ? (
+              <p className="text-gray-400">No offers available.</p>
             ) : (
               <ul className="space-y-4">
-                {offers.map((offer) => (
+                {offer.map((offer) => (
                   <li
-                    key={offer.id}
-                    className="bg-gray-900 p-4 rounded-md flex justify-around items-center"
-                  >
-                    {/* Name and Email in a Row */}
-                    <p className="font-semibold text-white">{offer.name}</p>
-                    <p className="text-gray-400">{offer.email}</p>
+                    key={offer._id}
+                    className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+                    >
+                    <p className="text-gray-400 w-40 truncate">{offer.name}</p>
+                    <p className="text-gray-400 text-center w-80 truncate  ">{offer.price}</p>
+                    <p className="text-blue-400 text-center w-32 text-center ml-[10vh] ">
+                      {offer.expirationDate
+                        ? new Date(offer.expirationDate).toLocaleDateString()
+                        : "N/A"}
+                    </p>
+                    <p className="`px-3 py-1 text-center  ml-[25vh] rounded-lg text-sm font-semibold transition duration-300 ">
+                      {offer.isActive ? "Active" : "Inactive"}
+                    </p>
+                    <button
+                        onClick={() => handleDelete(offer?._id)}
+                        className="px-3 text-center  py-1 bg-red-600 text-white ml-[20vh] rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
+                      >
+                      Delete
+                    </button>
+                    <button
+                        onClick={() => edittoggleModal(offer?._id)}
+                        className="px-3  text-center   py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
+                      >
+                      Edit
+                    </button>
+                   
                   </li>
                 ))}
               </ul>
             )}
-          </div>
         </div>
-        </div>
-  
-        {/* Add Agent Modal */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
-              <h2 className="text-xl font-semibold mb-4">Add New offer</h2>
-              <form onSubmit={handleAddAgent}>
-                <div className="mb-4">
-                  <label className="block text-gray-400 text-sm mb-2">Offer name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-400 text-sm mb-2">Offer price</label>
-                  <input
-                    type="number"
-                    name="offerprice"
-                    required
-                    className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={toggleModal}
-                    className="bg-gray-600 px-6 py-2 rounded-lg hover:bg-gray-700"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
-    );
-  };
 
-export default AdminOffers
+
+      <EditOfferModal
+        iseditOpen={iseditModalOpen}
+        oneditClose={() => setIseditModalOpen(false)}
+        offerData={handleEditItem}
+      />
+
+      <AddOfferModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        offerData={handleSaveItem}
+      />
+
+   
+    </div>
+  );
+};
+
+export default AdminOffers;
+ 

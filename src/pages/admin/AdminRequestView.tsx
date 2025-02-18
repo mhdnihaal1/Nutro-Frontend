@@ -1,4 +1,8 @@
 import React,{useState} from 'react'
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { adminLogout } from "../../redux/slices/adminSlice";
+import AdminSideBar from "../../components/admin/AdminSideBar";
 
 const AdminRequestView = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -6,7 +10,8 @@ const AdminRequestView = () => {
       { id: 1, name: "Agent A", email: "agentA@example.com" },
       { id: 2, name: "Agent B", email: "agentB@example.com" },
     ]);
-  
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const toggleModal = () => {
       setIsModalOpen(!isModalOpen);
     };
@@ -31,73 +36,16 @@ const AdminRequestView = () => {
       }
     };
   
+
     return (
       <div className="min-h-screen bg-black text-white flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col">
-          <div className="p-6 text-2xl font-bold border-b border-gray-700">
-            Admin Panel
-          </div>
-          <nav className="flex-grow p-4 space-y-4">
-          <a
-              href="Dashboard"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Dashboard
-            </a>
-            <a
-              href="Requests"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Requests
-            </a>
-            <a
-              href="Users"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Users
-            </a>
-            <a
-              href="agents"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Agents
-            </a>
-            <a
-              href="Items"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Items
-            </a>
-            <a
-              href="Offers"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Offers
-            </a>
-            <a
-              href="Services"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Services
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Settings
-            </a>
-          </nav>
-          <div className="p-4 border-t border-gray-700">
-            <button className="w-full bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700">
-              Logout
-            </button>
-          </div>
-        </aside>
-  
-        {/* Main Content */}
-        <div className="flex-grow p-8">
-          <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
+      {/* Sidebar */}
+      <AdminSideBar/>
+
+
+      {/* Main Content */}
+      <div className="flex-grow p-8 ml-64">
+       <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
   
           {/* Add Agent Button */}
           <button
