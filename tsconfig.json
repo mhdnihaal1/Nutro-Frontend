@@ -13,12 +13,12 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "bundler",   // ✅ replace "node" with "bundler"
+    "moduleResolution": "bundler",    
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "ignoreDeprecations": "6.0"      // ✅ silences warnings until TS 7
+    "ignoreDeprecations": "6.0"     
   },
   "include": ["src"]
 }
