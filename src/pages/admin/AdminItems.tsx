@@ -56,7 +56,7 @@ const AdminItems = () => {
     const fetchAgents = async () => {
       try {
         const items = await getItems();
-        console.log(items?.data)
+        // console.log("items",items?.data)
         setClothItem(Array.isArray(items?.data) ? (items?.data as IClothItem[]) : []);
         setLoading(false);
       } catch (err) {
@@ -78,7 +78,7 @@ const AdminItems = () => {
     try {
 
       const response = await addClothItem(itemData)
-
+      console.log("response",response)
       if (response?.data?.success) {
         toast.success("Item added successfully");
         setClothItem((prev) => [...prev, response.data.agent]);
@@ -124,10 +124,10 @@ const AdminItems = () => {
 
   const handleDelete = async (_id: string) => {
     try {
-      console.log(_id)
+      // console.log(_id)
       const res = await deleteItem(_id); 
       if (res) {
-        console.log(res)
+        // console.log(res)
         setClothItem((prev) => prev.filter((Item) => Item._id !== _id));
         toast.success("Map deleted successfully.")
 

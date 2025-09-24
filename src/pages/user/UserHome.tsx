@@ -57,24 +57,24 @@ const UserHome = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50">
       <UserNavbar />
        {/* Image Slider */}
-       <div className="w-full h-[75vh] relative">
+       <div className="w-full h-[45vh] mx-auto sm:h-[55vh] lg:h-[65vh] xl:h-[75vh]  relative">
   <Slider {...settings}>
     {bannerImages.map((image, index) => (
-      <div key={index} className="w-full h-[75vh] relative">
+      <div key={index} className="w-full mx-auto h-[45vh] sm:h-[55vh] lg:h-[65vh] xl:h-[75vh]  relative">
         <img
           src={image}
           alt={`banner-${index}`}
-          className="w-full h-[75vh] object-cover brightness-75"
+          className="w-full mx-auto h-[45vh] sm:h-[55vh] lg:h-[65vh] xl:h-[75vh]  object-cover brightness-75"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent flex flex-col items-start text-white text-left px-12 transition-all duration-700 ease-in-out">
+        <div className="absolute  inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent flex flex-col items-start text-white text-left px-12 transition-all duration-700 ease-in-out">
           
           {/* Animated Header Text */}
-          <h1 className="text-3xl mt-[15vh] md:text-5xl mb-10 font-extrabold tracking-widest  drop-shadow-xl animate-fade-in">
+          <h1 className="text-3xl lg:pl-20 xl:pl-20 mt-[15vh] md:text-5xl sm:text-4xl mb-10 font-extrabold tracking-widest  drop-shadow-xl animate-fade-in">
             <span className="text-blue-400  decoration-2 animate-pulse">Clean</span><span className="animate-pulse">Pro Laundry</span>
           </h1>
 
           {/* Animated Subtext */}
-          <p className="mt-2 text-sm md:text-lg font-medium text-gray-300 italic tracking-wider shadow-md animate-fade-in">
+          <p className="mt-2 lg:pl-20 xl:pl-20 text-sm md:text-lg font-medium text-gray-300 italic tracking-wider shadow-md animate-fade-in">
             <span className="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text animate-gradient">
               Effortless 
             </span>
@@ -87,7 +87,7 @@ const UserHome = () => {
           </p>
 
           {/* Animated Decorative Line */}
-          <div className="mt-4 w-16 h-[2px] bg-blue-400 animate-expand"></div>
+          <div className="mt-4 lg:ml-20 xl:ml-20 w-[76px] h-[4px] bg-blue-400 animate-expand"></div>
         </div>
       </div>
     ))}

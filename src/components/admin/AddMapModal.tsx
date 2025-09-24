@@ -33,7 +33,8 @@ const AddMapModal: React.FC<AddMapModalProps> = ({
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await mapData({ sl_no, place, pincode, latitude, longitude });
+    const res = await mapData({ sl_no, place, pincode, latitude, longitude });
+    console.log("res",res)
     setSl_no("");
     setPlace("");
     setPincode("");

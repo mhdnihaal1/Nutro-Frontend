@@ -7,7 +7,7 @@ import AdminProtected from "../protected/AdminProtected";
 
 const LoginPage = lazy(() => import("../pages/admin/AdminLogin"));
 const AgentPage = lazy(() => import("../pages/admin/AdminAgents"));
-const MapPage = lazy(() => import("../pages/admin/AdminMap"));
+const MapPage = lazy(() => import("../pages/admin/AdminMap")); 
 const DashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
 const ItemsPage = lazy(() => import("../pages/admin/AdminItems"));
 const OffersPage = lazy(() => import("../pages/admin/AdminOffers"));

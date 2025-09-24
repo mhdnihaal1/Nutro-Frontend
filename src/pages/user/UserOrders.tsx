@@ -171,7 +171,7 @@ const UserOrders = () => {
         <ArrowLeft className="w-6 h-6" />
       </button>
       <button
-        className="mt-4 ml-[250vh] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+        className=" ml-[220vh] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
         onClick={handleOpenModal}
       >
         Concerns

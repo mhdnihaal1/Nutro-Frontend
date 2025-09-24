@@ -57,14 +57,13 @@ const EditItemModal : React.FC<AddItemModalProps> = ({
     const validateForm = (): boolean => {
         const newErrors: Errors = {};
         if (!name.trim()) newErrors.name = "Name is required";
+    console.log(11)
       
         if (!category) {
           newErrors.category = "category is required";
-        } else if (icon) {
-          newErrors.icon = "Icon number is required";
-        }
+        } 
         if (!prices) {
-          newErrors.prices = "Password is required";
+          newErrors.prices = "prices is required";
         } 
     console.log(11)
         console.log(name, category, icon, prices )

@@ -123,7 +123,7 @@ const UserContact = () => {
           </div>
         </div>
         <div className="grid md:grid-cols-2 gap-10">
-          <div className="rounded-lg w-[200vh] mt-10 ml-10 shadow-lg overflow-hidden">
+          <div className="rounded-lg w-200 items-center sm:w-100 md:w-[106vh] lg:w-[143vh] xl:w-[180vh] 2xl:w-[210vh]  mt-10 ml-2  shadow-lg overflow-hidden">
             <iframe
               className="w-full h-64 md:h-80"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509371!2d144.95373531590406!3d-37.81720997975179!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d43f6e75555%3A0x5045675218ce7e33!2sMelbourne%20VIC!5e0!3m2!1sen!2sau!4v1604541819170!5m2!1sen!2sau"

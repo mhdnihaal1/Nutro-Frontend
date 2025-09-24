@@ -53,6 +53,7 @@ const AdminAgents = () => {
     latitude: string;
     longitude: string;
   }) => {
+    console.log(123)
     const { sl_no, place, pincode, latitude, longitude } = mapData;
     const Datas = {
       sl_no,
@@ -60,10 +61,14 @@ const AdminAgents = () => {
       pincode,
       latitude_longitude: [Number(latitude), Number(longitude)],
     } as IMap;
-    if (!sl_no || !place || !pincode) {
+    console.log("Datas",Datas,typeof sl_no ,typeof place ,typeof pincode)
+    if (sl_no || place || pincode) {
       try {
         const res = await addMap(Datas);
+        console.log("res1",res)
+
         const map = res?.data?.data?.data;
+        console.log("map",map)
         if (res?.data?.success) {
           setMap((prev) => [...prev, map]);
           setIsModalOpen(false);

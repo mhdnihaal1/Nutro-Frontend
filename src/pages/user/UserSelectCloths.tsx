@@ -9,7 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import UserNavbar from "../../components/user/UserNavbar";
 import UserFooter from "../../components/user/UserFooter";
 
-type Category = "Men" | "Women" | "Kid";
+type Category = "Men" | "Women" | "Kid" | "General";
 type Service = "wash" | "dryClean" | "iron";
 
 interface Item {
@@ -55,6 +55,7 @@ const UserSelectCloths = () => {
     Men: [],
     Women: [],
     Kid: [],
+    General:[]
   });
   const navigate = useNavigate();
 
@@ -146,7 +147,7 @@ const UserSelectCloths = () => {
           </h1>
 
           <div className="flex justify-center items-center mb-6">
-            {(["Men", "Women", "Kid"] as Category[]).map((category) => (
+            {(["Men", "Women", "Kid" , "General"] as Category[]).map((category) => (
               <button
                 key={category}
                 className={`px-4 py-2 w-[100vh] mr-2 rounded-lg font-semibold ${

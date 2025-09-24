@@ -4,9 +4,14 @@ import { getConcerns ,sendReply ,deleteConcern}  from "../../api/admin";
 import AdminSideBar from "../../components/admin/AdminSideBar";
 import { Toaster, toast } from "react-hot-toast";
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+ }
 interface Concern {
   _id: string;
-  userId: string;
+  userId: User;
   subject: string;
   summary: string;
   email: string;
@@ -22,6 +27,7 @@ const AdminConcerns: React.FC = () => {
     const fetchConcerns = async () => {
       try {
         const response = await getConcerns();
+        console.log(response)
         if (response?.data) {
           setConcerns(response.data);
         }
@@ -97,12 +103,13 @@ const AdminConcerns: React.FC = () => {
             </div>
 
             <ul className="space-y-4">
-              {concerns.map((concern) => (
+              
+              {Array.isArray(concerns) && concerns.length > 0 && concerns.map((concern) => (
                 <li
                   key={concern._id}
                   className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
                 >
-                  <p className="text-gray-400 w-40 truncate">{concern.userId}</p>
+                  <p className="text-gray-400 w-40 truncate">{concern.userId.name }</p>
                   <p className="text-gray-400 w-64 truncate">
                     {concern.subject}
                   </p>
@@ -119,7 +126,7 @@ const AdminConcerns: React.FC = () => {
                   />
 
                   <button
-                    onClick={() => handleReply(concern._id, concern.userId)}
+                    onClick={() => handleReply(concern._id, concern.userId._id)}
                     className="ml-[11vh] px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-500"
                   >
                      Reply
@@ -132,6 +139,7 @@ const AdminConcerns: React.FC = () => {
                   </button>
                 </li>
               ))}
+              
             </ul>
           </div>
         )}

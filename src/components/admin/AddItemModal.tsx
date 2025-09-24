@@ -59,7 +59,7 @@ const AddItemModal : React.FC<AddItemModalProps> = ({
       
         if (!category) {
           newErrors.category = "category is required";
-        } else if (icon) {
+        } else if (icon.length == 0) {
           newErrors.icon = "Icon number is required";
         }
         if (!prices) {
@@ -68,7 +68,7 @@ const AddItemModal : React.FC<AddItemModalProps> = ({
     console.log(11)
         console.log(name, category, icon, prices )
     
-        console.log(12)
+        console.log(12,newErrors)
     
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
