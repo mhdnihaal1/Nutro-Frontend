@@ -138,12 +138,11 @@ const AdminAgents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
       <AdminSideBar />
 
-      <div className="flex-grow p-8 ml-64">
+      <div className="flex-grow p-8 sm:p-6 lg:p-8 md:ml-64">
         <h1 className="text-3xl font-bold mb-8">Manage Map</h1>
-
         <button
           onClick={toggleModal}
           className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"

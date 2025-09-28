@@ -63,62 +63,77 @@ const AdminUsers = () => {
 
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen w-full bg-black text-white flex flex-col md:flex-row">
     {/* Sidebar */}
     <AdminSideBar/>
 
     {/* Main Content */}
-    <div className="flex-grow p-8 ml-64">
+     <div className="flex-grow p-2 sm:p-6 lg:p-8 md:ml-64">
     <h1 className="text-3xl font-bold mb-8">Users</h1>
 
-    <div className="space-y-4">
-    <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-            <h2 className="text-xl font-semibold">Name</h2>
-            <h2 className="text-xl font-semibold">Email</h2>
-            <h2 className="text-xl font-semibold pl-10">Mobile</h2>
-            <h2 className="text-xl font-semibold  ">User Status</h2>
-            <h2 className="text-xl font-semibold mr-10">Action</h2>
+  <div className="space-y-4 ">
+  {/* Header Row */}
+  <div className="hidden md:grid grid-cols-5 gap-4  bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+    <h2 className="text-xl font-semibold">Name</h2>
+    <h2 className="text-xl font-semibold">Email</h2>
+    <h2 className="text-xl font-semibold">Mobile</h2>
+    <h2 className="text-xl font-semibold">User Status</h2>
+    <h2 className="text-xl font-semibold">Action</h2>
+  </div>
+
+  {User.length === 0 ? (
+    <p className="text-gray-400 text-center">No users available.</p>
+  ) : (
+    <ul className="space-y-4">
+      {User.map((user, index) => (
+        <li
+          key={index}
+          className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+        >
+          {/* Desktop Grid */}
+          <div className="hidden md:grid grid-cols-5 gap-4 items-center">
+            <p className="text-gray-400 truncate">{user?.name || "N/A"}</p>
+            <p className="text-gray-400 truncate">{user?.email || "Not Assigned"}</p>
+            <p className="text-blue-400 text-center">{user?.phone || "N/A"}</p>
+            <p className="text-green-400 font-semibold text-center">
+              {user?.userStatus ? "Inactive" : "Active"}
+            </p>
+            <button
+              className={`px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 
+                ${user?.userStatus
+                  ? "bg-green-600 hover:bg-green-500 text-white"
+                  : "bg-red-600 hover:bg-red-500 text-white"}`}
+              onClick={() => handleUserStatus(user._id)}
+            >
+              {user?.userStatus ? "Unblock" : "Block"}
+            </button>
           </div>
 
-          {User.length === 0 ? (
-  <p className="text-gray-400 text-center">No users available.</p>
-) : (
-  <ul className="space-y-4">
-    {User.map((user, index) => (
-      <li
-        key={index}
-        className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
-      >
-        {/* User Name - Fixed Width */}
-        <p className="text-gray-400 w-40 truncate">{user?.name || "N/A"}</p>
+          {/* Mobile Layout */}
+          <div className="md:hidden space-y-2">
+            <p><span className="font-semibold">Name:</span> {user?.name || "N/A"}</p>
+            <p><span className="font-semibold">Email:</span> {user?.email || "Not Assigned"}</p>
+            <p><span className="font-semibold">Mobile:</span> {user?.phone || "N/A"}</p>
+            <p>
+              <span className="font-semibold">Status:</span>{" "}
+              {user?.userStatus ? "Inactive" : "Active"}
+            </p>
+            <button
+              className={`px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 
+                ${user?.userStatus
+                  ? "bg-green-600 hover:bg-green-500 text-white"
+                  : "bg-red-600 hover:bg-red-500 text-white"}`}
+              onClick={() => handleUserStatus(user._id)}
+            >
+              {user?.userStatus ? "Unblock" : "Block"}
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
 
-        {/* Email - Fixed Width */}
-        <p className="text-gray-400 w-80 truncate ml-[10vh] ">{user?.email || "Not Assigned"}</p>
-
-        {/* Phone - Fixed Width */}
-        <p className="text-blue-400 w-32 text-center ">{user?.phone || "N/A"}</p>
-
-        {/* User Status - Fixed Width */}
-        <p className="text-green-400 font-semibold w-24 text-center  ml-[20vh] ">
-          {user?.userStatus == true ? "inActive" : "Active"}
-        </p>
-        {/* Block/Unblock Button */}
-        <button
-          className={`px-3 py-1  ml-[25vh] rounded-lg text-sm font-semibold transition duration-300 
-            ${user?.userStatus == true 
-              ? "bg-green-600 hover:bg-green-500 text-white" 
-              : "bg-red-600 hover:bg-red-500 text-white"}`}
-          onClick={() => handleUserStatus(user._id)}
-        >
-          {user?.userStatus == false ? "Block" : "Unblock"}
-        </button>
-                 
-      </li>
-    ))}
-  </ul>
-)}
-
-        </div>
       </div>
     </div>
   );

@@ -206,135 +206,155 @@ interface IOrder extends Document {
 
   const COLORS = ["#FFA500", "#00C49F", "#FF4444"];
   return (
-    <div className="min-h-screen bg-black text-white flex">
-     <AdminSideBar/>
+     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
+      {/* Sidebar */}
+      <AdminSideBar />
 
-      <div className="flex-grow p-8 ml-64">
-        <div className="flex ">
-  <h1 className="text-3xl  font-bold mb-8">Admin Dashboard</h1>
-  <div className="relative w-40 ml-[100vh]">
-      
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-4 py-3 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700 focus:outline-none"
-      >
-        Download pdf
-        <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} />
-      </button>
+      {/* Main Content */}
+      <div className="flex-grow p-2 md:ml-64">
+        {/* Header Row */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
 
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <ul className="absolute w-full mt-2 bg-black text-white rounded-lg shadow-lg overflow-hidden z-10">
-          {options.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                Drop(item)
-                setIsOpen(false);
-              }}
-              className="px-4 py-3 cursor-pointer hover:bg-gray-700"
+          {/* Dropdown */}
+          <div className="w-full md:w-48">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex items-center justify-between  px-4 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700"
             >
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-    </div>
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {/* Revenue Trends Line Chart (Larger) */}
-    <div className="bg-gray-800 md:col-span-2 p-6 h-[62vh] rounded-lg" ref={revenuepdf}>
-  <h2 className="text-lg font-semibold mb-4 text-white">Revenue Trends</h2>
-  
-  {/* Responsive Chart Container */}
-  <div className="w-full h-full">
-    <ResponsiveContainer width="100%" height="90%">
-      <LineChart data={revenueData}>
-        <XAxis dataKey="month" stroke="#ffffff" />
-        <YAxis stroke="#ffffff" tickFormatter={(value) => `$${value.toLocaleString()}`} />
-        <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, "Revenue"]} />
-        <Legend />
-        <Line type="monotone" dataKey="revenue" stroke="#82ca9d" />
-      </LineChart>
-    </ResponsiveContainer>
-  </div>
-</div>
+              Download PDF
+              <ChevronDown
+                className={`w-5 h-5 transition-transform ${
+                  isOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </button>
 
-    {/* User Registrations & Order Distribution */}
-    <div>
-      <div className="bg-gray-800 p-6 rounded-lg" ref={orderspdf}>
-        <h2 className="text-lg font-semibold mb-4">Orders </h2>
-        <BarChart width={300} height={155} data={orderDistribution}>
-  <XAxis dataKey="month" stroke="#ffffff" />
-  <YAxis stroke="#ffffff" />
-  <Tooltip />
-  <Bar dataKey="order" fill="#8884d8" />
-</BarChart>
+            {isOpen && (
+              <ul className="absolute w-full mt-2 bg-gray-900 text-white rounded-lg shadow-lg overflow-hidden z-10">
+                {options.map((item, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      Drop(item);
+                      setIsOpen(false);
+                    }}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-700"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {/* Grid Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Revenue Trends */}
+          <div className="bg-gray-800 p-6 rounded-lg lg:col-span-2 min-w-0">
+            <h2 className="text-lg font-semibold mb-4">Revenue Trends</h2>
+            <div className="w-full h-64 md:h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={revenueData}>
+                  <XAxis dataKey="month" stroke="#ffffff" />
+                  <YAxis
+                    stroke="#ffffff"
+                    tickFormatter={(value) => `$${value.toLocaleString()}`}
+                  />
+                  <Tooltip
+                    formatter={(value) => [`$${value.toLocaleString()}`, "Revenue"]}
+                  />
+                  <Legend />
+                  <Line type="monotone" dataKey="revenue" stroke="#82ca9d" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Orders */}
+          <div className="flex justify-around lg:block gap-3">
+            <div className="bg-gray-800 p-6 rounded-lg w-[50vh] lg:w-full">
+              <h2 className="text-lg font-semibold mb-4">Orders</h2>
+              <ResponsiveContainer width="100%" height={160} className={"lg:h-[400px]"}>
+                <BarChart data={orderDistribution}>
+                  <XAxis dataKey="month" stroke="#ffffff" />
+                  <YAxis stroke="#ffffff" />
+                  <Tooltip />
+                  <Bar dataKey="order" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            {/* Order Distribution */}
+            <div className="bg-gray-800 p-6  rounded-lg w-[50vh] lg:w-full lg:mt-2">
+              <h2 className="text-lg font-semibold mb-4">Order Distribution</h2>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={orderData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label
+                  >
+                    {orderData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Agent Deliveries + User List */}
+        <div className="flex flex-col lg:flex-row gap-6 mt-6">
+          {/* Agent Deliveries */}
+          <div className="bg-gray-800 p-6 rounded-lg flex-1 min-w-0">
+            <h2 className="text-lg font-semibold mb-4">Agent Deliveries</h2>
+            <div className="w-full h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={agentDeliveries}>
+                  <XAxis dataKey="agent" stroke="#ffffff" />
+                  <YAxis stroke="#ffffff" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="deliveries" fill="#82ca9d" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* User List */}
+          <div className="bg-gray-800 p-6 rounded-lg flex-1 overflow-x-auto">
+            <h2 className="text-lg font-semibold mb-4">User List</h2>
+            <table className="w-full text-sm md:text-base">
+              <thead>
+                <tr className="border-b">
+                  <th className="p-2 text-left">Name</th>
+                  <th className="p-2 text-left">Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="p-2">{user.name}</td>
+                    <td className="p-2">{user.email}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-
-      <div className="bg-gray-800 p-6 mt-2 rounded-lg" ref={ditributionpdf}>
-        <h2 className="text-lg font-semibold mb-4">Order Distribution </h2>
-        <PieChart width={300} height={190}>
-        <Pie data={orderData} cx={150} cy={100} innerRadius={50} outerRadius={80} fill="#8884d8" dataKey="value" label>
-        {orderData.map((entry, index) => (
-      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-    ))}
-  </Pie>
-  <Tooltip />
-</PieChart>
-      </div>
     </div>
-  </div>
-
-  {/* Agent Deliveries Chart */}
-
-  <div className="flex flex-wrap justify-between mt-5 gap-6">
-  {/* Agent Deliveries Section */}
-  <div className="bg-gray-800 p-6 rounded-lg w-[800px]" ref={agentpdf}>
-    <h2 className="text-lg font-semibold mb-4 text-white">Agent Deliveries</h2>
-    <div className="w-full h-[300px]">
-      <ResponsiveContainer width="100%" height="90%">
-        <BarChart data={agentDeliveries} margin={{ left: 10, right: 10 }}>
-          <XAxis dataKey="agent" stroke="#ffffff" />
-          <YAxis stroke="#ffffff" />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="deliveries" fill="#82ca9d" />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  </div>
-
-  {/* User List Section */}
-  <div className="bg-gray-800 p-6 rounded-lg w-[53vh]" ref={userpdf}>
-    <h2 className="text-lg font-semibold mb-4 text-white">User List</h2>
-    <table className="w-full text-white">
-      <thead>
-        <tr className="border-b">
-          <th className="p-2 text-left">Name</th>
-          <th className="p-2 text-left">Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user, index) => (
-          <tr key={index} className="border-b">
-            <td className="p-2">{user.name}</td>
-            <td className="p-2">{user.email}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-   <div>
-  
-    </div>
-
-  </div>
-</div>
-
   );
 };
 

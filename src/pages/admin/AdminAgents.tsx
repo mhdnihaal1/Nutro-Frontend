@@ -132,9 +132,9 @@ const AdminAgents: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
       <AdminSideBar />
-      <div className="flex-grow p-8 ml-64">
+      <div className="flex-grow p-2 sm:p-6 lg:p-8 md:ml-64">
         <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
         <button
           onClick={toggleModal}
