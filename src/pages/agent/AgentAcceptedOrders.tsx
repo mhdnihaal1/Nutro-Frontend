@@ -120,87 +120,86 @@ const AcceptedOrders = () => {
   
  
   return (
-    <div className="min-h-screen bg-black text-white">
-        <div className="min-h-screen bg-black text-white flex">
-        {/* Sidebar */}
-         <AgentSideBar/>  
-  
-        {/* Main Content */}
-        <div className="flex-grow p-8 ml-64">
-    
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Accepted Orders</h1>
+   <div className="min-h-screen bg-black text-white">
+  <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
+    {/* Sidebar */}
+    <AgentSideBar />
 
-     
+    {/* Main Content */}
+    <div className="flex-grow p-4 md:p-8 md:ml-64">
+      <div className="container mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Accepted Orders</h1>
 
-        <div  className="bg-gray-800 p-6 rounded-lg space-y-6">
-
-
-
-        {agentOrders.length === 0 ? (
-          <p className="text-gray-400">No orders available.</p>
-        ) : (
-          agentOrders.map((order,index) => (
-              <div key={index}                         
-              onClick={() => TodetailsPage(order._id, order)} // Pass orderId and data
-              className="bg-gray-700 p-6 flex flex-col mb-6 rounded-lg shadow-md">
-               
-                <div className="flex justify-between items-center mb-4">
+        <div className="bg-gray-800 p-4 md:p-6 rounded-lg space-y-6">
+          {agentOrders.length === 0 ? (
+            <p className="text-gray-400">No orders available.</p>
+          ) : (
+            agentOrders.map((order, index) => (
+              <div
+                key={index}
+                onClick={() => TodetailsPage(order._id, order)} // Pass orderId and data
+                className="bg-gray-700 p-4 md:p-6 flex flex-col mb-6 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition"
+              >
+                {/* User Info */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                   <p className="text-sm text-gray-400">
-                  <strong>User name:</strong><br />  {order.userId.name}
+                    <strong>User name:</strong> <br /> {order.userId.name}
                   </p>
                   <p className="text-sm text-gray-400">
-                    <strong>User phone:</strong><br /> {order.userId.phone}
+                    <strong>User phone:</strong> <br />
+                    <span className="text-blue-400">{order.userId.phone}</span>
                   </p>
                 </div>
 
-                <ul className="space-y-2 ml-4">
-                  {order.clothItems.map((item,index) => (
-                    <li key={index+3} className="text-gray-300">
-                      <strong>{item.name}</strong> ({item.category}) - {item.quantity} x ${item.unitPrice} 
+                {/* Order Items */}
+                <ul className="space-y-2 ml-2 md:ml-4">
+                  {order.clothItems.map((item, idx) => (
+                    <li key={idx + 3} className="text-gray-300">
+                      <strong>{item.name}</strong> ({item.category}) -{" "}
+                      <span className="text-blue-400">
+                        {item.quantity} x ${item.unitPrice}
+                      </span>{" "}
                       <span className="text-gray-500">({item.service})</span>
-                      
                     </li>
-                    
                   ))}
-                  {order.status == "agentAccepted" ?
-                   <div className="mt-4 flex justify-end">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeliveredOrder(order._id);
-                      }}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-                    >
-                      Deliver Order
-                    </button>
-                  </div>
-                  :
-                <></>
-                    }
+
+                  {order.status === "agentAccepted" && (
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeliveredOrder(order._id);
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+                      >
+                        Deliver Order
+                      </button>
+                    </div>
+                  )}
                 </ul>
 
-                <div className="mt-4 flex justify-between">
+                {/* Footer Info */}
+                <div className="mt-4 flex flex-col sm:flex-row justify-between gap-4">
                   <p className="text-lg font-semibold text-gray-200">
-                    <strong>Total Price:</strong> ${order.totalPrice}
+                    <strong>Total Price:</strong>{" "}
+                    <span className="text-blue-400">${order.totalPrice}</span>
                   </p>
                   <p className="text-sm text-gray-400">
                     <strong>Delivery Mode:</strong> {order.deliveryMode}
                   </p>
                   <p className="text-sm text-gray-400">
-                    <strong>Delivery Mode:</strong> {order.paymentMethod}
+                    <strong>Payment Method:</strong> {order.paymentMethod}
                   </p>
                 </div>
               </div>
             ))
-        )}
-      </div>
-
-</div>
-
-</div>
+          )}
+        </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 

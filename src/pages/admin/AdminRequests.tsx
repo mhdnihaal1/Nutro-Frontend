@@ -91,7 +91,7 @@ const AdminRequests = () => {
     {/* Orders List */}
     <div className="space-y-4">
       {/* Header Row */}
-      <div className="hidden md:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+      <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
         <span className="font-semibold text-sm sm:text-base">User Name</span>
         <span className="font-semibold text-sm sm:text-base">Agent Name</span>
         <span className="font-semibold text-sm sm:text-base">Delivery Mode</span>
@@ -110,7 +110,7 @@ const AdminRequests = () => {
               className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
             >
               {/* Desktop Layout */}
-              <div className="hidden md:grid grid-cols-5 gap-4 items-center">
+              <div className="hidden lg:grid grid-cols-5 gap-4 items-center">
                 <p className="truncate">{order.userId?.name || "N/A"}</p>
                 <p className="truncate">{order.agentId?.name || "Not Assigned"}</p>
                 <p className="text-blue-400">{order.deliveryMode}</p>
@@ -123,7 +123,7 @@ const AdminRequests = () => {
               </div>
 
               {/* Mobile Layout */}
-              <div className="md:hidden space-y-2 text-sm">
+              <div className="lg:hidden space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="font-semibold">User:</span>
                   <span>{order.userId?.name || "N/A"}</span>

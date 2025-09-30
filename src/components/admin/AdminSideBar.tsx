@@ -169,7 +169,7 @@ const AdminSideBar = () => {
         </button>
       </div>
       {isOpen && (
-        <div className="h-full  w-16 bg-gray-900 flex flex-col items-center py-4 space-y-6 shadow-lg fixed left-0 top-0">
+        <div className="md:hidden h-full  w-16 bg-gray-900 flex flex-col items-center py-4 space-y-6 shadow-lg fixed left-0 top-0">
            
           <div className="w-10 h-10 bg-blue-600 flex items-center justify-center rounded-lg">
             <span

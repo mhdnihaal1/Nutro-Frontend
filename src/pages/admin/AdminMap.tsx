@@ -53,7 +53,7 @@ const AdminAgents = () => {
     latitude: string;
     longitude: string;
   }) => {
-    console.log(123)
+    console.log(123);
     const { sl_no, place, pincode, latitude, longitude } = mapData;
     const Datas = {
       sl_no,
@@ -61,14 +61,14 @@ const AdminAgents = () => {
       pincode,
       latitude_longitude: [Number(latitude), Number(longitude)],
     } as IMap;
-    console.log("Datas",Datas,typeof sl_no ,typeof place ,typeof pincode)
+    console.log("Datas", Datas, typeof sl_no, typeof place, typeof pincode);
     if (sl_no || place || pincode) {
       try {
         const res = await addMap(Datas);
-        console.log("res1",res)
+        console.log("res1", res);
 
         const map = res?.data?.data?.data;
-        console.log("map",map)
+        console.log("map", map);
         if (res?.data?.success) {
           setMap((prev) => [...prev, map]);
           setIsModalOpen(false);
@@ -139,78 +139,113 @@ const AdminAgents = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
-      <AdminSideBar />
+  <AdminSideBar />
 
-      <div className="flex-grow p-8 sm:p-6 lg:p-8 md:ml-64">
-        <h1 className="text-3xl font-bold mb-8">Manage Map</h1>
-        <button
-          onClick={toggleModal}
-          className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
-        >
-          Add Map
-        </button>
+  <div className="flex-grow p-6 md:ml-64">
+    <h1 className="text-3xl font-bold mb-8">Manage Map</h1>
 
-        <div className="space-y-4">
-          <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-            <h2 className="text-xl font-semibold">sl_no</h2>
-            <h2 className="text-xl font-semibold">place</h2>
-            <h2 className="text-xl font-semibold">pincode</h2>
-            <h2 className="text-xl font-semibold">latitude_longitude</h2>
-            <h2 className="text-xl font-semibold mr-[13vh]">Actions</h2>
-          </div>
+    {/* Add Map Button */}
+    <button
+      onClick={toggleModal}
+      className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
+    >
+      Add Map
+    </button>
 
-          <div>
-            {map.length === 0 ? (
-              <p className="text-gray-400">No users available.</p>
-            ) : (
-              <ul className="space-y-4">
-                {map.map((map, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
-                  >
-                    <p className="text-gray-400 w-40 truncate">{map?.sl_no}</p>
-                    <p className="text-gray-400 w-32 text-center ml-[10vh]">
-                      {map?.place}
-                    </p>
-                    <p className="text-blue-400 w-32 text-center ml-[16vh] ">
-                      {map?.pincode}
-                    </p>
-                    <p className="text-blue-400 w-32 text-center ml-[15vh]">
-                      {map?.latitude_longitude}
-                    </p>
-                    <button
-                      onClick={() => handleDelete(map?._id)}
-                      className="px-3 py-1 bg-red-600 text-white ml-[25vh] rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => edittoggleModal(map?._id)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
-                    >
-                      Edit
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <EditMapModal
-        iseditOpen={iseditModalOpen}
-        oneditClose={() => setIseditModalOpen(false)}
-        mapData={handleEditMap}
-      />
-
-      <AddMapModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        mapData={handleSaveMap}
-      />
+    {/* Table Header (Desktop Only) */}
+    <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+      <h2 className="text-xl font-semibold text-center">SL No</h2>
+      <h2 className="text-xl font-semibold text-center">Place</h2>
+      <h2 className="text-xl font-semibold text-center">Pincode</h2>
+      <h2 className="text-xl font-semibold text-center">Latitude / Longitude</h2>
+      <h2 className="text-xl font-semibold text-center">Actions</h2>
     </div>
+
+    {/* Table Rows */}
+    <div>
+      {map.length === 0 ? (
+        <p className="text-gray-400">No maps available.</p>
+      ) : (
+        <ul className="space-y-4">
+          {map.map((item, index) => (
+            <li
+              key={index}
+              className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+            >
+              {/* Desktop Layout */}
+              <div className="hidden lg:grid grid-cols-5 gap-4 items-center text-center">
+                <p className="text-gray-400">{item?.sl_no}</p>
+                <p className="text-gray-400">{item?.place}</p>
+                <p className="text-blue-400">{item?.pincode}</p>
+                <p className="text-blue-400">{item?.latitude_longitude}</p>
+                <div className="flex justify-center gap-2">
+                  <button
+                    onClick={() => handleDelete(item?._id)}
+                    className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm font-semibold transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => edittoggleModal(item?._id)}
+                    className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile Layout */}
+              <div className="lg:hidden space-y-2 text-sm">
+                <p className="flex justify-between">
+                  <span className="font-semibold">SL No:</span> {item?.sl_no || "N/A"}
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-semibold">Place:</span> {item?.place || "N/A"}
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-semibold">Pincode:</span>
+                  <span className="text-blue-400">{item?.pincode || "N/A"}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-semibold">Lat / Long:</span>
+                  <span className="text-blue-400">{item?.latitude_longitude || "N/A"}</span>
+                </p>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => handleDelete(item?._id)}
+                    className="flex-1 px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 bg-red-600 hover:bg-red-500 text-white "
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => edittoggleModal(item?._id)}
+                    className="flex-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+
+  {/* Modals */}
+  <EditMapModal
+    iseditOpen={iseditModalOpen}
+    oneditClose={() => setIseditModalOpen(false)}
+    mapData={handleEditMap}
+  />
+
+  <AddMapModal
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    mapData={handleSaveMap}
+  />
+</div>
+
   );
 };
 

@@ -48,35 +48,61 @@ const AgentProfile = () => {
 
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
-      {/* Sidebar */}
-      <AgentSideBar/>  
+   <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white flex flex-col md:flex-row">
+   <AgentSideBar />
 
-  
-      {/* Profile Content */}
+   <div className="flex-grow p-4 md:p-8 md:ml-64 flex justify-center items-center">
+    <div className="w-full max-w-5xl">
+       <h1 className="text-4xl font-extrabold text-center mb-10 bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
+        🌍 Agent Map
+      </h1>
 
-<div className="flex-grow p-8 ml-64 flex justify-center items-center min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
-
-      <div className="w-full max-w-3xl bg-gray-900 bg-opacity-75 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-gray-700">
-      <h1 className="text-4xl text-center font-extrabold text-white mb-8">Agent Map</h1>
-      <div className="p-6 bg-gray-800 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-gray-200 border-b border-gray-700 pb-2">Map Details</h2>
-        {mapData ? (
-          <div className="mt-6 space-y-4 text-gray-300">
-            <p className="text-lg"><strong className="text-gray-400">Sl No:</strong> {mapData.sl_no || "N/A"}</p>
-            <p className="text-lg"><strong className="text-gray-400">Place:</strong> {mapData.place || "N/A"}</p>
-            <p className="text-lg"><strong className="text-gray-400">Pincode:</strong> {mapData.pincode || "N/A"}</p>
-            <p className="text-lg"><strong className="text-gray-400">Latitude & Longitude:</strong> {mapData.latitude_longitude || "N/A"}</p>
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         <div className="bg-gray-900 bg-opacity-70  rounded-2xl p-6 border border-gray-700 shadow-2xl flex flex-col justify-center items-center">
+          <div className="w-full h-64 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl flex items-center justify-center text-gray-400 text-lg">
+            🗺️ Map Preview Placeholder
           </div>
-        ) : (
-          <p className="text-lg text-red-500 mt-4 text-center">No agent details available.</p>
-        )}
-       
+          <p className="mt-4 text-sm text-gray-400 text-center">
+            (Map visualization will appear here)
+          </p>
+        </div>
+
+        {/* Map Details */}
+        <div className="bg-gray-900 bg-opacity-70   rounded-2xl p-8 border border-gray-700 shadow-2xl">
+          <h2 className="text-2xl font-semibold text-white border-b border-gray-700 pb-3">
+            📍 Map Details
+          </h2>
+          {mapData ? (
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-300">
+              <div className="bg-gray-800 p-4 rounded-xl shadow-md border border-gray-700">
+                <p className="text-sm text-gray-400">Sl No</p>
+                <p className="text-lg font-semibold">{mapData.sl_no || "N/A"}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded-xl shadow-md border border-gray-700">
+                <p className="text-sm text-gray-400">Place</p>
+                <p className="text-lg font-semibold">{mapData.place || "N/A"}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded-xl shadow-md border border-gray-700">
+                <p className="text-sm text-gray-400">Pincode</p>
+                <p className="text-lg font-semibold">{mapData.pincode || "N/A"}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded-xl shadow-md border border-gray-700">
+                <p className="text-sm text-gray-400">Latitude & Longitude</p>
+                <p className="text-lg font-semibold">
+                  {mapData.latitude_longitude || "N/A"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-lg text-red-500 mt-6 text-center">
+              No agent map details available.
+            </p>
+          )}
+        </div>
       </div>
     </div>
-    </div>
-    </div>
-
+  </div>
+</div>
   );
 };
 

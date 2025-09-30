@@ -144,89 +144,133 @@ const AdminItems = () => {
  
  
     return (
-      <div className="min-h-screen bg-black text-white flex">
-        {/* Sidebar */}
-        <AdminSideBar/>
+      <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
+  {/* Sidebar */}
+  <AdminSideBar />
 
-  
-        {/* Main Content */}
-        <div className="flex-grow p-8 ml-64">
-          <h1 className="text-3xl font-bold mb-8">Manage Items</h1>
-  
-          {/* Add Agent Button */}
-          <button
-            onClick={toggleModal}
-            className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
-          >
-            Add Items
-          </button>
-  
-          <div className="space-y-4">
-          <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-          <h2 className="text-xl font-semibold ml-[4vh]">Name</h2>
-            <h2 className="text-xl font-semibold">Category</h2>
-            <h2 className="text-xl font-semibold">Icon</h2>
-            <h2 className="text-xl font-semibold mr-[25vh]">Prices</h2>
-            <h2 className="text-xl font-semibold mr-[15vh]">Action</h2>
+  {/* Main Content */}
+  <div className="flex-grow p-6 md:ml-64">
+    <h1 className="text-3xl font-bold mb-8">Manage Items</h1>
 
-          </div>
+    {/* Add Item Button */}
+    <button
+      onClick={toggleModal}
+      className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
+    >
+      Add Item
+    </button>
 
-          <div>
-            {clothItem.length === 0 ? (
-              <p className="text-gray-400">No users available.</p>
-            ) : (
-              <ul className="space-y-4">
-                {clothItem.map((item) => (
-                  <li
-                    key={item._id}
-                    className="bg-gray-900 p-4 rounded-md flex justify-around items-center"
-                  >
-                    {/* Name and Email in a Row */}
-                    <p className="text-gray-400 w-40 truncate">{item.name}</p>
-                    <p className="text-gray-400 w-40 truncate">{item.category}</p>
-                    <p className="text-gray-400 w-40 truncate pl-[10vh]">{item.icon}</p>
-                    <div className="text-gray-400 w-40 truncate">
-  {Object.entries(item.prices).map(([key, value]) => (
-    <div key={key} className="flex justify-between border-b py-2">
-      <span className="font-semibold text-gray-700">{key}</span>
-      <span className="text-gray-600">{value ? value : ''}</span>
-    </div>
-  ))}
-</div>
-               <button
-                        onClick={() => handleDelete(item?._id)}
-                        className="px-3 text-center  py-1 bg-red-600 text-white ml-[25vh] rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
-                      >
+    <div className="space-y-4">
+      {/* Desktop Header */}
+      <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+        <h2 className="text-xl font-semibold text-center">Name</h2>
+        <h2 className="text-xl font-semibold text-center">Category</h2>
+        <h2 className="text-xl font-semibold text-center">Icon</h2>
+        <h2 className="text-xl font-semibold text-center">Prices</h2>
+        <h2 className="text-xl font-semibold text-center">Actions</h2>
+      </div>
+
+      {/* Items */}
+      <div>
+        {clothItem.length === 0 ? (
+          <p className="text-gray-400">No items available.</p>
+        ) : (
+          <ul className="space-y-4">
+            {clothItem.map((item) => (
+              <li
+                key={item._id}
+                className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+              >
+                {/* Desktop Layout */}
+                <div className="hidden lg:grid grid-cols-5 gap-4 items-center text-center">
+                  <p className="text-gray-400">{item.name}</p>
+                  <p className="text-gray-400">{item.category}</p>
+                  <p className="text-gray-400">{item.icon}</p>
+
+                  <div className="text-gray-400">
+                    {Object.entries(item.prices).map(([key, value]) => (
+                      <div key={key} className="flex justify-between border-b py-1">
+                        <span className="font-semibold text-gray-300">{key}</span>
+                        <span className="text-gray-400">{value || ''}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-center gap-2">
+                    <button
+                      onClick={() => handleDelete(item?._id)}
+                      className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm font-semibold transition hover:bg-red-700"
+                    >
                       Delete
                     </button>
                     <button
-                        onClick={() => edittoggleModal(item?._id)}
-                        className="px-3    py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
-                      >
+                      onClick={() => edittoggleModal(item?._id)}
+                      className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition hover:bg-blue-700"
+                    >
                       Edit
                     </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-        </div>
+                  </div>
+                </div>
 
-  
-        <EditItemModal
-        iseditOpen={iseditModalOpen}
-        oneditClose={() => setIseditModalOpen(false)}
-        itemData={handleEditItem}
-      />
-
-      <AddItemModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        itemData={handleSaveItem}
-      />
-    
+                {/* Mobile Layout */}
+                <div className="lg:hidden space-y-2 text-sm">
+                  <p className="flex justify-between">
+                    <span className="font-semibold">Name:</span> {item.name}
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="font-semibold">Category:</span> {item.category}
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="font-semibold">Icon:</span> {item.icon}
+                  </p>
+                  <div className="space-y-1">
+                    <span className="font-semibold">Prices:</span>
+                    <div className="pl-4">
+                      {Object.entries(item.prices).map(([key, value]) => (
+                        <div key={key} className="flex justify-between border-b py-1">
+                          <span className="font-semibold text-gray-300">{key}</span>
+                          <span className="text-gray-400">{value || ''}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => handleDelete(item?._id)}
+                      className="flex-1 px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 bg-red-600 hover:bg-red-500 text-white"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => edittoggleModal(item?._id)}
+                      className="flex-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-700"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
+    </div>
+  </div>
+
+  {/* Modals */}
+  <EditItemModal
+    iseditOpen={iseditModalOpen}
+    oneditClose={() => setIseditModalOpen(false)}
+    itemData={handleEditItem}
+  />
+
+  <AddItemModal
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    itemData={handleSaveItem}
+  />
+</div>
+
     );
   };
 

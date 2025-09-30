@@ -147,86 +147,139 @@ const AdminOffers = () => {
 
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
-    {/* Sidebar */}
-    <AdminSideBar/>
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
+  {/* Sidebar */}
+  <AdminSideBar />
 
-
-    {/* Main Content */}
-    <div className="flex-grow p-8 ml-64">
+  {/* Main Content */}
+  <div className="flex-grow p-6 md:ml-64">
     <h1 className="text-3xl font-bold mb-8">Manage Offers</h1>
 
-        {/* Add Offer Button */}
-        <button
-          onClick={toggleModal}
-          className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
-        >
-          Add Offer
-        </button>
+    {/* Add Offer Button */}
+    <button
+      onClick={toggleModal}
+      className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
+    >
+      Add Offer
+    </button>
 
-        <div className="space-y-4">
-        <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-           <h2 className="text-xl font-semibold">Offer Name</h2>
-            <h2 className="text-xl font-semibold">Offer Price</h2>
-            <h2 className="text-xl font-semibold">Expiration Date</h2>
-            <h2 className="text-xl text-center font-semibold ">isActive</h2>
-            <h2 className="text-xl text-center font-semibold mr-[10vh]">Action</h2>
-          </div>
-
-            {offer.length === 0 ? (
-              <p className="text-gray-400">No offers available.</p>
-            ) : (
-              <ul className="space-y-4">
-                {offer.map((offer) => (
-                  <li
-                    key={offer._id}
-                    className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
-                    >
-                    <p className="text-gray-400 w-40 truncate">{offer.name}</p>
-                    <p className="text-gray-400 text-center w-80 truncate  ">{offer.price}</p>
-                    <p className="text-blue-400 text-center w-32 text-center ml-[10vh] ">
-                      {offer.expirationDate
-                        ? new Date(offer.expirationDate).toLocaleDateString()
-                        : "N/A"}
-                    </p>
-                    <p className="`px-3 py-1 text-center  ml-[25vh] rounded-lg text-sm font-semibold transition duration-300 ">
-                      {offer.isActive ? "Active" : "Inactive"}
-                    </p>
-                    <button
-                        onClick={() => handleDelete(offer?._id)}
-                        className="px-3 text-center  py-1 bg-red-600 text-white ml-[20vh] rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
-                      >
-                      Delete
-                    </button>
-                    <button
-                        onClick={() => edittoggleModal(offer?._id)}
-                        className="px-3  text-center   py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-red-700"
-                      >
-                      Edit
-                    </button>
-                   
-                  </li>
-                ))}
-              </ul>
-            )}
-        </div>
-      </div>
-
-
-      <EditOfferModal
-        iseditOpen={iseditModalOpen}
-        oneditClose={() => setIseditModalOpen(false)}
-        offerData={handleEditItem}
-      />
-
-      <AddOfferModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        offerData={handleSaveItem}
-      />
-
-   
+    {/* Table Header (Desktop Only) */}
+    <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+      <h2 className="text-xl font-semibold text-center">Offer Name</h2>
+      <h2 className="text-xl font-semibold text-center">Offer Price</h2>
+      <h2 className="text-xl font-semibold text-center">Expiration Date</h2>
+      <h2 className="text-xl font-semibold text-center">Status</h2>
+      <h2 className="text-xl font-semibold text-center">Actions</h2>
     </div>
+
+    {/* Table Rows */}
+    <div>
+      {offer.length === 0 ? (
+        <p className="text-gray-400">No offers available.</p>
+      ) : (
+        <ul className="space-y-4">
+          {offer.map((item, index) => (
+            <li
+              key={item._id}
+              className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+            >
+              {/* Desktop Layout */}
+              <div className="hidden lg:grid grid-cols-5 gap-4 items-center text-center">
+                <p className="text-gray-400 truncate">{item?.name}</p>
+                <p className="text-gray-400">{item?.price}</p>
+                <p className="text-blue-400">
+                  {item?.expirationDate
+                    ? new Date(item.expirationDate).toLocaleDateString()
+                    : "N/A"}
+                </p>
+                <p
+                  className={`px-3 py-1 rounded-lg text-sm font-semibold ${
+                    item?.isActive
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  {item?.isActive ? "Active" : "Inactive"}
+                </p>
+                <div className="flex justify-center gap-2">
+                  <button
+                    onClick={() => handleDelete(item?._id)}
+                    className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm font-semibold transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => edittoggleModal(item?._id)}
+                    className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile Layout */}
+              <div className="lg:hidden space-y-2 text-sm">
+                <p className="flex justify-between">
+                  <span className="font-semibold">Offer Name:</span>{" "}
+                  {item?.name || "N/A"}
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-semibold">Price:</span>{" "}
+                  {item?.price || "N/A"}
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-semibold">Expires:</span>{" "}
+                  <span className="text-blue-400">
+                    {item?.expirationDate
+                      ? new Date(item.expirationDate).toLocaleDateString()
+                      : "N/A"}
+                  </span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-semibold">Status:</span>{" "}
+                  <span
+                    className={`${
+                      item?.isActive ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
+                    {item?.isActive ? "Active" : "Inactive"}
+                  </span>
+                </p>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => handleDelete(item?._id)}
+                    className="flex-1 px-3 py-1 bg-red-600 text-white rounded-lg text-sm font-semibold transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => edittoggleModal(item?._id)}
+                    className="flex-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+
+  {/* Modals */}
+  <EditOfferModal
+    iseditOpen={iseditModalOpen}
+    oneditClose={() => setIseditModalOpen(false)}
+    offerData={handleEditItem}
+  />
+  <AddOfferModal
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    offerData={handleSaveItem}
+  />
+</div>
+
   );
 };
 
