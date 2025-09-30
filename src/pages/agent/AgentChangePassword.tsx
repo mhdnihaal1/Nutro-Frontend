@@ -156,7 +156,7 @@ const AgentChangePassword = () => {
       </h1>
 
       {/* Change Password Card */}
-      <div className="bg-gray-900 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-700 p-8">
+      <div className="bg-gray-900 bg-opacity-80  rounded-2xl shadow-2xl border border-gray-700 p-8">
         {Agent ? (
           <div className="flex flex-col items-center">
             <h2 className="text-2xl font-semibold mb-6 text-gray-200">Verify Old Password</h2>
