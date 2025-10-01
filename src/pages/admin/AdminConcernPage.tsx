@@ -81,70 +81,123 @@ const AdminConcerns: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
-      <AdminSideBar />
-      <div className="flex-grow p-8 ml-64">
-        <h1 className="text-3xl font-bold mb-8">Manage User Concerns</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex">
+  {/* Sidebar */}
+  <AdminSideBar />
 
-        {loading ? (
-          <p className="text-center text-gray-400">Loading...</p>
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
-        ) : concerns.length === 0 ? (
-          <p className="text-gray-400">No concerns available.</p>
-        ) : (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-              <h2 className="text-xl font-semibold w-40">User Email</h2>
-              <h2 className="text-xl font-semibold w-64">Subject</h2>
-              <h2 className="text-xl font-semibold w-96">Summary</h2>
-              <h2 className="text-xl font-semibold w-96">Reply</h2>
-              <h2 className="text-xl  font-semibold">Action</h2>
-            </div>
+  {/* Main Content */}
+  <div className="flex-grow p-6 md:p-10 md:ml-64">
+    <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">
+      Manage User Concerns
+    </h1>
 
-            <ul className="space-y-4">
-              
-              {Array.isArray(concerns) && concerns.length > 0 && concerns.map((concern) => (
-                <li
-                  key={concern._id}
-                  className="flex items-center bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
-                >
-                  <p className="text-gray-400 w-40 truncate">{concern.userId.name }</p>
-                  <p className="text-gray-400 w-64 truncate">
-                    {concern.subject}
-                  </p>
-                  <p className="text-gray-400 w-96 truncate">{concern.summary}</p>
+    {loading ? (
+      <p className="text-center text-gray-400">Loading...</p>
+    ) : error ? (
+      <p className="text-center text-red-500">{error}</p>
+    ) : concerns.length === 0 ? (
+      <p className="text-center text-gray-400">No concerns available.</p>
+    ) : (
+      <div className="space-y-6">
+        {/* ---------- DESKTOP VIEW (lg+) ---------- */}
+        <div className="hidden lg:block">
+          <div className="grid grid-cols-6 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+            <h2 className="text-lg font-semibold">User</h2>
+            <h2 className="text-lg font-semibold">Subject</h2>
+            <h2 className="text-lg font-semibold col-span-2">Summary</h2>
+            <h2 className="text-lg font-semibold">Reply</h2>
+            <h2 className="text-lg font-semibold">Action</h2>
+          </div>
 
-                  <input
-                    type="text"
-                    placeholder="Type your reply..."
-                    className="w-93 p-2 border rounded bg-gray-900 text-white"
-                    value={replyText}
-                    onChange={(e) =>
-                      setReplyText( e.target.value )
-                    }
-                  />
-
+          <ul className="space-y-4 mt-4">
+            {concerns.map((concern) => (
+              <li
+                key={concern._id}
+                className="grid grid-cols-6 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+              >
+                <p className="text-gray-300 truncate">{concern.userId.name}</p>
+                <p className="text-gray-300 truncate">{concern.subject}</p>
+                <p className="text-gray-400 truncate col-span-2">
+                  {concern.summary}
+                </p>
+                <input
+                  type="text"
+                  placeholder="Reply..."
+                  className="p-2 rounded bg-gray-900 text-white border border-gray-600"
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                />
+                <div className="flex gap-2 justify-end">
                   <button
-                    onClick={() => handleReply(concern._id, concern.userId._id)}
-                    className="ml-[11vh] px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-500"
+                    onClick={() =>
+                      handleReply(concern._id, concern.userId._id)
+                    }
+                    className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-semibold transition"
                   >
-                     Reply
+                    Reply
                   </button>
                   <button
                     onClick={() => handleDelete(concern._id)}
-                    className="ml-2 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-500"
+                    className="px-3 py-1 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-semibold transition"
                   >
                     Delete
                   </button>
-                </li>
-              ))}
-              
-            </ul>
-          </div>
-        )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* ---------- MOBILE/TABLET VIEW (<lg) ---------- */}
+        <div className="block lg:hidden space-y-4">
+          {concerns.map((concern) => (
+            <div
+              key={concern._id}
+              className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700 space-y-3"
+            >
+              <p className="text-gray-300">
+                <span className="font-semibold">User: </span>
+                {concern.userId.name}
+              </p>
+              <p className="text-gray-300">
+                <span className="font-semibold">Subject: </span>
+                {concern.subject}
+              </p>
+              <p className="text-gray-400">
+                <span className="font-semibold">Summary: </span>
+                {concern.summary}
+              </p>
+
+              <input
+                type="text"
+                placeholder="Reply..."
+                className="w-full p-2 rounded bg-gray-900 text-white border border-gray-600"
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+              />
+
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => handleReply(concern._id, concern.userId._id)}
+                  className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-semibold transition"
+                >
+                  Reply
+                </button>
+                <button
+                  onClick={() => handleDelete(concern._id)}
+                  className="px-3 py-1 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-semibold transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    )}
+  </div>
+</div>
+
   );
 };
 
