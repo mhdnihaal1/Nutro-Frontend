@@ -160,6 +160,8 @@ const AdminAgents: React.FC = () => {
     ) : (
       <div className="space-y-4">
         {/* Desktop Table Header */}
+        {/* {Array.isArray(agents) ? ( */}
+        
         <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
           <h2 className="text-xl font-semibold text-center">Name</h2>
           <h2 className="text-xl font-semibold text-center">Email</h2>
@@ -168,8 +170,7 @@ const AdminAgents: React.FC = () => {
           <h2 className="text-xl font-semibold text-center">Action</h2>
         </div>
 
-        {/* Agents List */}
-        {agents.length === 0 ? (
+         {agents.length === 0 ? (
           <p className="text-gray-400">No agents available.</p>
         ) : (
           <ul className="space-y-4">
@@ -259,7 +260,11 @@ const AdminAgents: React.FC = () => {
             ))}
           </ul>
         )}
+
       </div>
+//           ) : (
+//   <p className="flex justify-center pt-[30vh]">No concerns found</p>
+// )}
     )}
   </div>
 

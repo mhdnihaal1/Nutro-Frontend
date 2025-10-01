@@ -100,6 +100,7 @@ const AdminConcerns: React.FC = () => {
     ) : (
       <div className="space-y-6">
         {/* ---------- DESKTOP VIEW (lg+) ---------- */}
+        {Array.isArray(concerns) ? (
         <div className="hidden lg:block">
           <div className="grid grid-cols-6 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
             <h2 className="text-lg font-semibold">User</h2>
@@ -110,7 +111,7 @@ const AdminConcerns: React.FC = () => {
           </div>
 
           <ul className="space-y-4 mt-4">
-            {concerns.map((concern) => (
+            { Array.isArray(concerns)  && concerns.map((concern) => (
               <li
                 key={concern._id}
                 className="grid grid-cols-6 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
@@ -147,10 +148,12 @@ const AdminConcerns: React.FC = () => {
             ))}
           </ul>
         </div>
-
+) : (
+  <p className="flex justify-center pt-[30vh]">No concerns found</p>
+)}
         {/* ---------- MOBILE/TABLET VIEW (<lg) ---------- */}
         <div className="block lg:hidden space-y-4">
-          {concerns.map((concern) => (
+          { Array.isArray(concerns)  && concerns.map((concern) => (
             <div
               key={concern._id}
               className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700 space-y-3"
