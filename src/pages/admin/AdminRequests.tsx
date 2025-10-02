@@ -43,6 +43,7 @@ interface IOrderItem {
   unitPrice: number;
 }
 interface IOrder extends Document {
+  _id:string;
   userId:IUser;
   clothItems: IOrderItem[]; 
   addres: IAddres[];
@@ -61,6 +62,9 @@ const AdminRequests = () => {
 
     const [ Orders , setOrders ] = useState<IOrder[]>([])
    
+  const TodetailsPage = (orderId: string, orderData: IOrder) => {
+    navigate(`/admin/RequestView/${orderId}`, { state: { orderData } });
+   }
 
     useEffect(() => {
 
@@ -108,6 +112,7 @@ const AdminRequests = () => {
             <li
               key={index}
               className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
+              onClick={()=>TodetailsPage(order._id,order)}
             >
               {/* Desktop Layout */}
               <div className="hidden lg:grid grid-cols-5 gap-4 items-center">

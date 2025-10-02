@@ -1,128 +1,103 @@
-import React,{useState} from 'react'
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { adminLogout } from "../../redux/slices/adminSlice";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "redux/store";
+import { agentLogout } from "../../redux/slices/agentSlice";
 import AdminSideBar from "../../components/admin/AdminSideBar";
 
-const AdminRequestView = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [agents, setAgents] = useState([
-      { id: 1, name: "Agent A", email: "agentA@example.com" },
-      { id: 2, name: "Agent B", email: "agentB@example.com" },
-    ]);
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const toggleModal = () => {
-      setIsModalOpen(!isModalOpen);
-    };
-  
-    const handleAddAgent = (event: React.FormEvent) => {
-      event.preventDefault();
-      const formData = new FormData(event.target as HTMLFormElement);
-  
-      const name = formData.get("name") as string | null;
-      const email = formData.get("email") as string | null;
-      if (name && email) {
-        const newAgent = {
-          id: agents.length + 1,
-          name: name,
-          email: email,
-        };
-  
-        setAgents([...agents, newAgent]);
-        toggleModal();
-      } else {
-        alert("Please fill in all fields.");
-      }
-    };
-  
+const AgentRequestDetails = () => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const order = location.state?.orderData;
 
-    return (
-      <div className="min-h-screen bg-black text-white flex">
-      {/* Sidebar */}
-      <AdminSideBar/>
+  console.log(order)
+
+  const agent = useSelector((state: RootState) => state.agentAuth);
+  const Agent = agent?.agentInfo
 
 
-      {/* Main Content */}
-      <div className="flex-grow p-8 ml-64">
-       <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
-  
-          {/* Add Agent Button */}
-          <button
-            onClick={toggleModal}
-            className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-8"
-          >
-            Add Agent
-          </button>
-  
-          {/* Agents List */}
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Agents List</h2>
-            {agents.length === 0 ? (
-              <p className="text-gray-400">No agents available.</p>
-            ) : (
-              <ul className="space-y-4">
-                {agents.map((agent) => (
-                  <li
-                    key={agent.id}
-                    className="bg-gray-900 p-4 rounded-md flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="font-semibold">{agent.name}</p>
-                      <p className="text-gray-400 text-sm">{agent.email}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-  
-        {/* Add Agent Modal */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
-              <h2 className="text-xl font-semibold mb-4">Add New Agent</h2>
-              <form onSubmit={handleAddAgent}>
-                <div className="mb-4">
-                  <label className="block text-gray-400 text-sm mb-2">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-400 text-sm mb-2">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="w-full p-3 bg-gray-700 text-white rounded-lg outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={toggleModal}
-                    className="bg-gray-600 px-6 py-2 rounded-lg hover:bg-gray-700"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+  useEffect(() => {
+    if (!Agent) {
+      navigate("/agent/login");
+    }
+  }, [Agent]);
+
+
+
+  if (!order) return <p className="text-center text-red-500">No order data available.</p>;
+
+
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col lg:flex-row">
+  {/* Sidebar */}
+  <div className="w-full lg:w-64">
+    <AdminSideBar />
+  </div>
+
+  {/* Main Content */}
+  <div className="md:flex-grow p-4 sm:p-6 lg:p-8 ">
+    <h1 className="text-2xl sm:text-3xl font-bold text-center lg:text-left text-white mb-6">
+      Order Details
+    </h1>
+
+    <div className="container w-full max-w-3xl mx-auto bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md">
+      {/* User Information */}
+      <div className="mb-4">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-300 mb-2">User Details</h2>
+        <p><strong>Name:</strong> {order.userId.name}</p>
+        <p><strong>Email:</strong> {order.userId.email}</p>
+        <p><strong>Phone:</strong> {order.userId.phone}</p>
       </div>
-    );
-  };
 
-export default AdminRequestView
+      {/* Address Information */}
+      <div className="mb-4">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-300 mb-2">Address</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <p><strong>NearBy:</strong> {order?.addres[0]?.nearBy}</p>
+          <p><strong>Street:</strong> {order?.addres[0]?.street}</p>
+          <p><strong>City:</strong> {order?.addres[0]?.city}</p>
+          <p><strong>State:</strong> {order?.addres[0]?.state}</p>
+          <p><strong>PostalCode:</strong> {order?.addres[0]?.postalCode}</p>
+        </div>
+      </div>
+
+      {/* Cloth Items */}
+      <div className="mb-4">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-300 mb-2">Cloth Items</h2>
+        <ul className="list-disc list-inside space-y-1">
+          {order.clothItems.map((item: any) => (
+            <li key={item.clothItemId} className="text-sm sm:text-base">
+              <strong>{item.name}</strong> ({item.category}) - {item.quantity} x ${item.unitPrice}
+              <span className="text-gray-400"> ({item.service})</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Order Summary */}
+      <div className="mt-4 space-y-2">
+        <p><strong>Delivery Mode:</strong> {order.deliveryMode}</p>
+        <p className="text-base sm:text-lg font-semibold">
+          <strong>Total Price:</strong> ${order.totalPrice}
+        </p>
+      </div>
+
+      {/* Back Button */}
+      <div className="flex justify-center lg:justify-start">
+        <button
+          onClick={() => navigate(-1)}
+          className="mt-6 bg-blue-600 px-4 py-2 rounded-lg text-white font-semibold hover:bg-blue-700 w-full sm:w-auto"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  );
+};
+
+export default AgentRequestDetails;

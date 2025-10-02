@@ -111,82 +111,99 @@ const NewOrders = () => {
 
 
   return (
-    <div className="min-h-screen bg-black text-white">
-  <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
-    {/* Sidebar */}
-    <AgentSideBar />
+   <div className="min-h-screen bg-black text-white flex flex-col md:flex-row" >
+  {/* Sidebar */}
+  <AgentSideBar />
 
-    {/* Main Content */}
-    <div className="flex-grow p-4 md:p-8 md:ml-64">
-      <div className="container mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">New Orders</h1>
+  {/* Main Content */}
+  <div className="flex-grow p-4 md:p-8 md:ml-64">
+    <div className="container mx-auto">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">
+        New Orders
+      </h1>
 
-        <div className="bg-gray-800 p-4 md:p-6 rounded-lg space-y-6">
-          {agentOrders.length === 0 ? (
-            <p className="text-gray-400">No orders available.</p>
-          ) : (
-            agentOrders.map((order, index) => (
-              <div
-                key={index}
-                onClick={() => TodetailsPage(order._id, order)}
-                className="bg-gray-700 p-4 md:p-6 flex flex-col mb-6 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition"
-              >
-                {/* User Info */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-                  <p className="text-sm text-gray-400">
-                    <strong>User name:</strong> <br /> {order.userId.name}
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    <strong>User phone:</strong> <br />
-                    <span className="text-blue-400">{order.userId.phone}</span>
-                  </p>
+      {/* Orders Container */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {agentOrders.length === 0 ? (
+          <p className="text-gray-400 col-span-full text-center">
+            No orders available.
+          </p>
+        ) : (
+          agentOrders.map((order, index) => (
+            <div
+              key={index}
+              onClick={() => TodetailsPage(order._id, order)}
+              className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg hover:shadow-xl p-6 transition cursor-pointer border border-gray-700"
+            >
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
+                <div>
+                  <p className="text-gray-400 text-sm">User</p>
+                  <p className="font-semibold">{order.userId.name}</p>
                 </div>
-
-                {/* Order Items */}
-                <ul className="space-y-2 ml-2 md:ml-4">
-                  {order.clothItems.map((item, idx) => (
-                    <li key={idx + 3} className="text-gray-300">
-                      <strong>{item.name}</strong> ({item.category}) -{" "}
-                      <span className="text-blue-400">
-                        {item.quantity} x ${item.unitPrice}
-                      </span>{" "}
-                      <span className="text-gray-500">({item.service})</span>
-                    </li>
-                  ))}
-
-                  {order.status === "orderPlaced" && (
-                    <div className="mt-4 flex justify-end">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAcceptOrder(order._id);
-                        }}
-                        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-                      >
-                        Accept Order
-                      </button>
-                    </div>
-                  )}
-                </ul>
-
-                {/* Footer */}
-                <div className="mt-4 flex flex-col sm:flex-row justify-between gap-4">
-                  <p className="text-lg font-semibold text-gray-200">
-                    <strong>Total Price:</strong>{" "}
-                    <span className="text-blue-400">${order.totalPrice}</span>
-                  </p>
-
-                  <p className="text-sm text-gray-400">
-                    <strong>Delivery Mode:</strong> {order.deliveryMode}
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    <strong>Payment Method:</strong> {order.paymentMethod}
+                <div>
+                  <p className="text-gray-400 text-sm">Phone</p>
+                  <p className="text-blue-400 font-semibold">
+                    {order.userId.phone}
                   </p>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+
+              {/* Order Items */}
+              <div className="mb-4">
+                <p className="text-gray-300 font-medium mb-2">Cloth Items</p>
+                <ul className="space-y-1">
+                  {order.clothItems.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="text-sm text-gray-300 flex justify-between"
+                    >
+                      <span>
+                        <strong>{item.name}</strong> ({item.category})
+                      </span>
+                      <span className="text-blue-400">
+                        {item.quantity} × ${item.unitPrice}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Accept Button */}
+              {order.status === "orderPlaced" && (
+                <div className="mb-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAcceptOrder(order._id);
+                    }}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition"
+                  >
+                    Accept Order
+                  </button>
+                </div>
+              )}
+
+              {/* Footer */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm gap-2">
+                <p>
+                  <span className="text-gray-400">Total Price:</span>{" "}
+                  <span className="font-bold text-blue-400">
+                    ${order.totalPrice}
+                  </span>
+                </p>
+                <p className="text-gray-400">
+                  Delivery:{" "}
+                  <span className="font-medium">{order.deliveryMode}</span>
+                </p>
+                <p className="text-gray-400">
+                  Payment:{" "}
+                  <span className="font-medium">{order.paymentMethod}</span>
+                </p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   </div>

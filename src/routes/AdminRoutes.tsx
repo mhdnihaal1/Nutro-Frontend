@@ -32,7 +32,7 @@ const AdminRoutes = () => {
       <Route path="Dashboard" element={<DashboardPage />} />
       <Route path="Items" element={<ItemsPage />} />
       <Route path="Offers" element={<OffersPage />} />
-      <Route path="RequestView" element={<RequestViewPage />} />
+      <Route path="RequestView/:orderId" element={<RequestViewPage />} />
       <Route path="Requests" element={<RequestsPage />} />
       <Route path="Services" element={<ServicesPage />} />
       <Route path="Users" element={<UsersPage />} />

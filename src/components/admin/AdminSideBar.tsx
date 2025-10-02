@@ -200,7 +200,7 @@ const AdminSideBar = () => {
             {/* Logout at bottom */}
             <div className="mt-auto">
               <button
-                onClick={() => console.log("Logout")}
+                onClick={() => logout()}
                 title="Logout"
                 className="p-2 rounded-lg hover:bg-red-600 text-gray-400 transition-colors"
               >

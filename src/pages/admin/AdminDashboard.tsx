@@ -1,37 +1,48 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, LineChart, Line, Legend, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import { Toaster, toast } from "react-hot-toast";
 import AdminSideBar from "../../components/admin/AdminSideBar";
 import { adminLogout } from "../../redux/slices/adminSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {  getOrders , getUsers , getAgents } from "../../api/admin";
+import { getOrders, getUsers, getAgents } from "../../api/admin";
 import { ChevronDown, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-interface IUser  {
-  _id:string;
+interface IUser {
+  _id: string;
   name: string;
   phone: number;
   email: string;
   password: string;
-  userStatus:boolean;
-
+  userStatus: boolean;
 }
 interface IOrderItem {
   clothItemId: string;
   name: string;
   category: string;
   quantity: number;
-  service: 'wash' | 'dryClean' | 'iron';
+  service: "wash" | "dryClean" | "iron";
   unitPrice: number;
 }
 
 interface IAddres {
-
-  _id:object;
+  _id: object;
   nearBy: string;
   street: string;
   city: string;
@@ -39,129 +50,175 @@ interface IAddres {
   postalCode: string;
   createdAt?: Date;
   updatedAt?: Date;
-
 }
 interface IOrder extends Document {
-  userId:string;
-  clothItems: IOrderItem[]; 
-  addres: IAddres[]; 
-  status: "orderPlaced" | "orderConfirmed" | "agentAccepted" | "readyForPickup" | "itemOnLaundry" | "itemPacked" | "outForDelivery" | "delivered" | "cancelled";
+  userId: string;
+  clothItems: IOrderItem[];
+  addres: IAddres[];
+  status:
+    | "orderPlaced"
+    | "orderConfirmed"
+    | "agentAccepted"
+    | "readyForPickup"
+    | "itemOnLaundry"
+    | "itemPacked"
+    | "outForDelivery"
+    | "delivered"
+    | "cancelled";
   totalPrice: number;
   deliveryMode: string;
-  agentId:string;
+  agentId: string;
   createdAt: Date;
   updatedAt: Date;
-  }
+}
 
-  const AdminDashboard = () => {
+const AdminDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
-  const options = ["Revenue", "Order", "Orderdistribution", "Agentdeliveries","Users"];
+  const options = [
+    "Revenue",
+    "Order",
+    "Orderdistribution",
+    "Agentdeliveries",
+    "Users",
+  ];
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [users , setusers] = useState<IUser[]>([])
-  const [orders , setOrders] = useState<IOrder[]>([])
+  const [users, setusers] = useState<IUser[]>([]);
+  const [orders, setOrders] = useState<IOrder[]>([]);
   const [totalSellingPrice, setTotalSellingPrice] = useState<number>(0);
-  const [revenueData, setRevenueData] = useState<{ month: string; revenue: number }[]>([]);
-  const [ orderDistribution , setOrderDistribution] = useState<{ month: string; order: number }[]>([])
-  const [orderData, setOrderData] = useState<{ name: string; value: number }[]>([]);
-  const [agentDeliveries, setAgentDeliveries] = useState<{ agent: string; deliveries: number }[]>([]);
+  const [revenueData, setRevenueData] = useState<
+    { month: string; revenue: number }[]
+  >([]);
+  const [orderDistribution, setOrderDistribution] = useState<
+    { month: string; order: number }[]
+  >([]);
+  const [orderData, setOrderData] = useState<{ name: string; value: number }[]>(
+    []
+  );
+  const [agentDeliveries, setAgentDeliveries] = useState<
+    { agent: string; deliveries: number }[]
+  >([]);
 
-  const revenuepdf = useRef<HTMLDivElement | null>(null); 
-  const orderspdf = useRef<HTMLDivElement | null>(null); 
-  const ditributionpdf = useRef<HTMLDivElement | null>(null); 
-  const agentpdf = useRef<HTMLDivElement | null>(null); 
-  const userpdf = useRef<HTMLDivElement | null>(null); 
+  const revenuepdf = useRef<HTMLDivElement | null>(null);
+  const orderspdf = useRef<HTMLDivElement | null>(null);
+  const ditributionpdf = useRef<HTMLDivElement | null>(null);
+  const agentpdf = useRef<HTMLDivElement | null>(null);
+  const userpdf = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-    const user = await getUsers()
-    const order = await getOrders()
-    const agents = await getAgents();
-    console.log(agents?.data)
+        const user = await getUsers();
+        const order = await getOrders();
+        const agents = await getAgents();
 
-        if(user?.data && order?.data || agents?.data){
+        if ((user?.data && order?.data) || agents?.data) {
           setusers(Array.isArray(user?.data) ? (user?.data as IUser[]) : []);
-          setOrders(Array.isArray(order?.data) ? (order?.data as IOrder[]) : []);
+          setOrders(
+            Array.isArray(order?.data) ? (order?.data as IOrder[]) : []
+          );
 
           const request = Array.isArray(order?.data) ? order?.data : [];
 
           //----------chaert -1
-          
-          const monthlyRevenues = request?.reduce((acc: Record<string, number>, elem: any) => {
-              if (!elem?.createdAt && typeof elem?.totalPrice !== "number" ) return acc; 
-              if( elem?.status == "delivered"){
-                const month = new Date(elem.createdAt).toLocaleString("en-US", { month: "short" });
-                acc[month] = (acc[month] || 0) + elem.totalPrice; 
+
+          const monthlyRevenues = request?.reduce(
+            (acc: Record<string, number>, elem: any) => {
+              if (!elem?.createdAt && typeof elem?.totalPrice !== "number")
+                return acc;
+              if (elem?.status == "delivered") {
+                const month = new Date(elem.createdAt).toLocaleString("en-US", {
+                  month: "short",
+                });
+                acc[month] = (acc[month] || 0) + elem.totalPrice;
               }
-             
+
               return acc;
-          }, {});
-          
-          const chartData = Object.entries(monthlyRevenues ?? {}).map(([month, revenue]) => ({
-            month,
-            revenue,
-        }));
+            },
+            {}
+          );
 
-            setRevenueData(chartData);
-            const total = Object.values(monthlyRevenues ?? {}).reduce((sum, val) => sum + val, 0);
-            setTotalSellingPrice(total);
+          const chartData = Object.entries(monthlyRevenues ?? {}).map(
+            ([month, revenue]) => ({
+              month,
+              revenue,
+            })
+          );
 
-           //--------------------chart -2
+          setRevenueData(chartData);
+          const total = Object.values(monthlyRevenues ?? {}).reduce(
+            (sum, val) => sum + val,
+            0
+          );
+          setTotalSellingPrice(total);
 
-           const monthlyOrders = request?.reduce((acc: Record<string, number>, elem: any ,index:any) => {
-            if (!elem?.createdAt ) return acc; 
-            if( elem?.status == "delivered"){
-            const month = new Date(elem.createdAt).toLocaleString("en-US", { month: "short" });
-            acc[month] = (acc[month] || 0) + 1; 
-            }
-            return acc;
-        }, {});
-        console.log(monthlyOrders)
+          //--------------------chart -2
 
+          const monthlyOrders = request?.reduce(
+            (acc: Record<string, number>, elem: any, index: any) => {
+              if (!elem?.createdAt) return acc;
+              if (elem?.status == "delivered") {
+                const month = new Date(elem.createdAt).toLocaleString("en-US", {
+                  month: "short",
+                });
+                acc[month] = (acc[month] || 0) + 1;
+              }
+              return acc;
+            },
+            {}
+          );
 
-        const chart2Data = Object.entries(monthlyOrders ?? {}).map(([month, order]) => ({
-          month,
-          order,
-      }));
-      console.log(chart2Data)
+          const chart2Data = Object.entries(monthlyOrders ?? {}).map(
+            ([month, order]) => ({
+              month,
+              order,
+            })
+          );
 
-        setOrderDistribution(chart2Data)
+          setOrderDistribution(chart2Data);
 
-        //----------- pie chart -3
+          //----------- pie chart -3
 
-        if (!request || !Array.isArray(request)) return;
+          if (!request || !Array.isArray(request)) return;
 
-  const categoryDistribution = request.reduce((acc: Record<string, number>, { status }) => {
-    if (!status) return acc; 
+          const categoryDistribution = request.reduce(
+            (acc: Record<string, number>, { status }) => {
+              if (!status) return acc;
 
-    acc[status] = (acc[status] || 0) + 1; 
-    return acc;
-  }, {});
+              acc[status] = (acc[status] || 0) + 1;
+              return acc;
+            },
+            {}
+          );
 
-  const formattedData = Object.entries(categoryDistribution).map(([name, value]) => ({ name, value }));
-  setOrderData(formattedData);
+          const formattedData = Object.entries(categoryDistribution).map(
+            ([name, value]) => ({ name, value })
+          );
+          setOrderData(formattedData);
 
-            //----------chart -4 
+          //----------chart -4
 
-      const deliveriesMap = request.reduce((acc: Record<string, number>, { agentId, status }) => {
-        if (status !== "delivered" || !agentId) return acc; 
+          const deliveriesMap = request.reduce(
+            (acc: Record<string, number>, { agentId, status }) => {
+              if (status !== "delivered" || !agentId) return acc;
 
-        const agentKey = agentId._id.toString(); 
-        acc[agentKey] = (acc[agentKey] || 0) + 1;    
-            return acc;
-      }, {});
+              const agentKey = agentId._id.toString();
+              acc[agentKey] = (acc[agentKey] || 0) + 1;
+              return acc;
+            },
+            {}
+          );
 
-      const formatData = agents?.data.map((agent:any) => ({
-        agent: agent.name,
-        deliveries: deliveriesMap[agent._id] || 0, 
-      }));
-      setAgentDeliveries(formatData);
-            setLoading(false);
+          const formatData = agents?.data.map((agent: any) => ({
+            agent: agent.name,
+            deliveries: deliveriesMap[agent._id] || 0,
+          }));
+          setAgentDeliveries(formatData);
+          setLoading(false);
         }
       } catch (err) {
         setError("Failed to fetch Dashboard data");
@@ -170,43 +227,48 @@ interface IOrder extends Document {
     };
 
     fetchData();
-  },[])
+  }, []);
 
-  const Drop = async (item:string) => {
+  const Drop = async (item: string) => {
     setSelected(item);
-     let input:any = revenuepdf.current;
-    if(item == 'Revenue'){
-       input = revenuepdf.current;
-    }else if(item == 'Order'){
+    let input: any = revenuepdf.current;
+    if (item == "Revenue") {
+      input = revenuepdf.current;
+    } else if (item == "Order") {
       input = orderspdf.current;
-    }else if(item == 'Orderdistribution'){
+    } else if (item == "Orderdistribution") {
       input = ditributionpdf.current;
-    }else if(item == 'Agentdeliveries'){
+    } else if (item == "Agentdeliveries") {
       input = agentpdf.current;
-    }else if(item == 'Users'){
+    } else if (item == "Users") {
       input = userpdf.current;
     }
-  
-    html2canvas(input).then((canvas)=>{
-      const imageData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p','mm','a4',true);
+
+    html2canvas(input).then((canvas) => {
+      const imageData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4", true);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgWIdth = canvas.width;
       const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWIdth , pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWIdth * ratio ) / 2;
+      const ratio = Math.min(pdfWidth / imgWIdth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWIdth * ratio) / 2;
       const imgY = 30;
-      pdf.addImage(imageData,'PNG',imgX,imgY ,imgWIdth * ratio , imgHeight * ratio );
-      pdf.save('invoice.pdf')
-    })
-
-  }
-
+      pdf.addImage(
+        imageData,
+        "PNG",
+        imgX,
+        imgY,
+        imgWIdth * ratio,
+        imgHeight * ratio
+      );
+      pdf.save("invoice.pdf");
+    });
+  };
 
   const COLORS = ["#FFA500", "#00C49F", "#FF4444"];
   return (
-     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
       {/* Sidebar */}
       <AdminSideBar />
 
@@ -263,7 +325,10 @@ interface IOrder extends Document {
                     tickFormatter={(value) => `$${value.toLocaleString()}`}
                   />
                   <Tooltip
-                    formatter={(value) => [`$${value.toLocaleString()}`, "Revenue"]}
+                    formatter={(value) => [
+                      `$${value.toLocaleString()}`,
+                      "Revenue",
+                    ]}
                   />
                   <Legend />
                   <Line type="monotone" dataKey="revenue" stroke="#82ca9d" />
@@ -276,7 +341,11 @@ interface IOrder extends Document {
           <div className="flex justify-around lg:block gap-3">
             <div className="bg-gray-800 p-6 rounded-lg w-[50vh] lg:w-full">
               <h2 className="text-lg font-semibold mb-4">Orders</h2>
-              <ResponsiveContainer width="100%" height={160} className={"lg:h-[400px]"}>
+              <ResponsiveContainer
+                width="100%"
+                height={160}
+                className={"lg:h-[400px]"}
+              >
                 <BarChart data={orderDistribution}>
                   <XAxis dataKey="month" stroke="#ffffff" />
                   <YAxis stroke="#ffffff" />

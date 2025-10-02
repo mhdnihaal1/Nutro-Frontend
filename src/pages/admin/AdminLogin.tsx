@@ -28,10 +28,9 @@ const UserLogin = () => {
     setShowPassword(!showPassword);
   };
 
-  console.log(adminInfo)
-  useEffect(() => {
+   useEffect(() => {
     if (adminInfo) {
-      navigate("/admin/dashboard");
+       navigate("/admin/dashboard");
     }
   }, [adminInfo]);
 
@@ -62,16 +61,16 @@ const UserLogin = () => {
         password: password,
       };
 
-      console.log(email,password)
-
+ 
       try {
         const response = await login(data);
-        console.log(response)
-        if (response) {
+         if (response?.data?.data?.message !== 'Invalid email or password') {
           toast.success("Login successful!");
           localStorage.setItem("token", response?.data?.data?.token);
           dispatch(setAdminCredentials(response?.data?.data?.message));
           navigate("/admin/dashboard");
+        }else{
+          toast.error("Invalid email or password!");
         }
       } catch (error) {
         toast.error("Invalid credentials. Please try again.");
