@@ -83,7 +83,7 @@ const UserSelectCloths = () => {
     (item) => item.category === selectedCategory
   );
   const addAllToCart = () => {
-    console.log(123 )
+    console.log(123,user.userInfo)
     const allSelectedItems = filteredItems.filter((_, index) =>
       selectedItems[selectedCategory].includes(index)
     );
