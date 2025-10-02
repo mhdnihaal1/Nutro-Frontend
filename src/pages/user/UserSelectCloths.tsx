@@ -82,13 +82,13 @@ const UserSelectCloths = () => {
   const filteredItems = items.filter(
     (item) => item.category === selectedCategory
   );
-
   const addAllToCart = () => {
-    console.log(123,)
+    console.log(123,user.userInfo._id)
     const allSelectedItems = filteredItems.filter((_, index) =>
       selectedItems[selectedCategory].includes(index)
     );
-console.log(allSelectedItems,user.userInfo._id)
+console.log(allSelectedItems )
+
     setCart((prevCart) => [
       ...prevCart,
       ...allSelectedItems.map((item,index) => ({
