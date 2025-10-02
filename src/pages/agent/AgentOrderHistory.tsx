@@ -65,13 +65,12 @@ const OrderHistory = () => {
       try {
       
         const response = await getAgentOrders(agentId);
-        if(response?.data){
+        console.log(response)
+        if(response?.data !== "Agent is blocked"){
           const orders = response?.data;
-          console.log("Fetched Orders:", orders);
-          const sortOrders = orders.filter((item: IOrder) => item.status === "delivered");
+           const sortOrders = orders.filter((item: IOrder) => item.status === "delivered");
   
-          console.log('sorted' , sortOrders)
-  
+   
           setAgentOrders(Array.isArray(sortOrders) ? sortOrders : []);
         }
       } catch (error) {

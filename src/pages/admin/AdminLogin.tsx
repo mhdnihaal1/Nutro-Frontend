@@ -30,7 +30,7 @@ const UserLogin = () => {
 
    useEffect(() => {
     if (adminInfo) {
-       navigate("/admin/dashboard");
+        navigate("/admin/dashboard");
     }
   }, [adminInfo, navigate]);
 
@@ -64,7 +64,7 @@ const UserLogin = () => {
  
       try {
         const response = await login(data);
-         if (response?.data?.data?.message !== 'Invalid email or password') {
+          if (response?.data?.data?.message !== 'Invalid email or password') {
           toast.success("Login successful!");
           localStorage.setItem("token", response?.data?.data?.token);
           dispatch(setAdminCredentials(response?.data?.data?.message));

@@ -61,18 +61,17 @@ const UserLogin = () => {
         password: password,
       };
 
-      // console.log(email,password)
-
+ 
       try {
         const response = await login(data);
-        console.log(response?.data?.data)
-        if (response?.data?.status !== 400) {
+        console.log(123,response )
+        if (response?.data?.status !== 400 && response?.data !== "Authorization header missing or invalid") {
           localStorage.setItem("token", response?.data?.data?.token);
           dispatch(setAgentCredentials(response?.data?.data?.message)); 
           toast.success("Login successful!");
           navigate("/agent/newOrders");
         } else {
-          toast.error(response?.data?.data?.message || "Invalid credentials");
+          toast.error(response?.data  || "Invalid credentials");
         }
       } catch (error) {
         toast.error("Invalid credentials. Please try again.");
