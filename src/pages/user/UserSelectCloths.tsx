@@ -67,6 +67,8 @@ const UserSelectCloths = () => {
     const fetchItems = async () => {
       try {
         const response = await getItems();
+              console.log("Fetched items:", response?.data); // <-- deploy this
+
         setItems(
           Array.isArray(response?.data) ? (response?.data as IClothItem[]) : []
         );
@@ -82,19 +84,20 @@ const UserSelectCloths = () => {
   );
 
   const addAllToCart = () => {
+    console.log(123,)
     const allSelectedItems = filteredItems.filter((_, index) =>
       selectedItems[selectedCategory].includes(index)
     );
-
+console.log(allSelectedItems,user.userInfo._id)
     setCart((prevCart) => [
       ...prevCart,
-      ...allSelectedItems.map((item) => ({
+      ...allSelectedItems.map((item,index) => ({
         userId: user.userInfo._id,
         id: item._id,
         name: item.name,
         price: `$${item.prices.wash}`,
         service: service,
-        quantity: itemQuantities[item._id] || 1,
+        quantity: itemQuantities[item._id] || index,
       })),
     ]);
 
@@ -189,7 +192,7 @@ const UserSelectCloths = () => {
 
             {filteredItems.map((item, index) => (
               <div
-                key={item._id}
+                key={item._id || index}
                 className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-md border border-gray-300"
               >
                 <div className="flex items-center">
@@ -220,7 +223,7 @@ const UserSelectCloths = () => {
                   <div className="w-28 text-center">
                     <input
                       type="number"
-                      value={itemQuantities[item._id] || 1}
+                      value={itemQuantities[item._id] || index}
                       min={1}
                       onChange={(e) => {
                         const newQuantity = parseInt(e.target.value, 10);
