@@ -9,14 +9,14 @@ import {
 import AddAgentModal from "../../components/admin/AddAgentModal";
 import EditAgentModal from "../../components/admin/EditAgentModal";
 import AdminSideBar from "../../components/admin/AdminSideBar";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
-interface Errors {
-  name?: string;
-  email?: string;
-  phone?: string;
-  password?: string;
-}
+// interface Errors {
+//   name?: string;
+//   email?: string;
+//   phone?: string;
+//   password?: string;
+// }
 
 interface Agent {
   _id: string;
@@ -105,7 +105,7 @@ const AdminAgents: React.FC = () => {
       if (response?.data) {
         toast.success("Agent edited successfully");
         setAgents((prev) =>
-          prev.map((agent) => (agent._id == _id ? response.data : agent))
+          prev.map((agent) => (agent._id === _id ? response.data : agent))
         );
 
         setIseditModalOpen(false);
@@ -122,10 +122,9 @@ const AdminAgents: React.FC = () => {
   const handlestatus = async (agentId: string) => {
     try {
       const res = await agentStatus(agentId);
-      console.log(res);
-      if (res) {
+       if (res) {
         setAgents((prev) =>
-          prev.map((agent) => (agent._id == agentId ? res?.data : agent))
+          prev.map((agent) => (agent._id === agentId ? res?.data : agent))
         );
 
         toast.success("Agent status changed successfully.");
@@ -140,147 +139,149 @@ const AdminAgents: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
-  <AdminSideBar />
+      <AdminSideBar />
 
-  <div className="flex-grow p-2 sm:p-6 lg:p-8 md:ml-64">
-    <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
+      <div className="flex-grow p-2 sm:p-6 lg:p-8 md:ml-64">
+        <h1 className="text-3xl font-bold mb-8">Manage Agents</h1>
 
-    {/* Add Agent Button */}
-    <button
-      onClick={toggleModal}
-      className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 mb-8"
-    >
-      Add Agent
-    </button>
+        {/* Add Agent Button */}
+        <button
+          onClick={toggleModal}
+          className="bg-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 mb-8"
+        >
+          Add Agent
+        </button>
 
-    {loading ? (
-      <p className="text-center text-gray-400">Loading...</p>
-    ) : error ? (
-      <p className="text-center text-red-500">{error}</p>
-    ) : (
-      <div className="space-y-4">
-        {/* Desktop Table Header */}
-        {/* {Array.isArray(agents) ? ( */}
-        
-        <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-          <h2 className="text-xl font-semibold text-center">Name</h2>
-          <h2 className="text-xl font-semibold text-center">Email</h2>
-          <h2 className="text-xl font-semibold text-center">Mobile</h2>
-          <h2 className="text-xl font-semibold text-center">Status</h2>
-          <h2 className="text-xl font-semibold text-center">Action</h2>
-        </div>
-
-         {agents.length === 0 ? (
-          <p className="text-gray-400">No agents available.</p>
+        {loading ? (
+          <p className="text-center text-gray-400">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
         ) : (
-          <ul className="space-y-4">
-            {agents.map((agent, index) => (
-              <li
-                key={index}
-                className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
-              >
-                {/* Desktop Layout */}
-                <div className="hidden lg:grid grid-cols-5 gap-4 items-center text-center">
-                  <p className="truncate">{agent?.name || "N/A"}</p>
-                  <p className="truncate">{agent?.email || "Not Assigned"}</p>
-                  <p className="text-blue-400">{agent?.phone || "N/A"}</p>
-                  <p
-                    className={`font-semibold ${
-                      agent?.agentStatus ? "text-red-400" : "text-green-400"
-                    }`}
+          <div className="space-y-4">
+            {/* Desktop Table Header */}
+            {/* {Array.isArray(agents) ? ( */}
+
+            <div className="hidden lg:grid grid-cols-5 gap-4 bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+              <h2 className="text-xl font-semibold text-center">Name</h2>
+              <h2 className="text-xl font-semibold text-center">Email</h2>
+              <h2 className="text-xl font-semibold text-center">Mobile</h2>
+              <h2 className="text-xl font-semibold text-center">Status</h2>
+              <h2 className="text-xl font-semibold text-center">Action</h2>
+            </div>
+
+            {agents.length === 0 ? (
+              <p className="text-gray-400">No agents available.</p>
+            ) : (
+              <ul className="space-y-4">
+                {agents.map((agent, index) => (
+                  <li
+                    key={index}
+                    className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700"
                   >
-                    {agent?.agentStatus ? "Inactive" : "Active"}
-                  </p>
-                  <div className="flex justify-center gap-2">
-                    <button
-                      className={`px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 text-white ${
-                        agent?.agentStatus
-                          ? "bg-green-600 hover:bg-green-500"
-                          : "bg-red-600 hover:bg-red-500"
-                      }`}
-                      onClick={() => handlestatus(agent._id)}
-                    >
-                      {agent?.agentStatus ? "Unblock" : "Block"}
-                    </button>
-                    <button
-                      onClick={() => edittoggleModal(agent._id)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-700"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
+                    {/* Desktop Layout */}
+                    <div className="hidden lg:grid grid-cols-5 gap-4 items-center text-center">
+                      <p className="truncate">{agent?.name || "N/A"}</p>
+                      <p className="truncate">
+                        {agent?.email || "Not Assigned"}
+                      </p>
+                      <p className="text-blue-400">{agent?.phone || "N/A"}</p>
+                      <p
+                        className={`font-semibold ${
+                          agent?.agentStatus ? "text-red-400" : "text-green-400"
+                        }`}
+                      >
+                        {agent?.agentStatus ? "Inactive" : "Active"}
+                      </p>
+                      <div className="flex justify-center gap-2">
+                        <button
+                          className={`px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 text-white ${
+                            agent?.agentStatus
+                              ? "bg-green-600 hover:bg-green-500"
+                              : "bg-red-600 hover:bg-red-500"
+                          }`}
+                          onClick={() => handlestatus(agent._id)}
+                        >
+                          {agent?.agentStatus ? "Unblock" : "Block"}
+                        </button>
+                        <button
+                          onClick={() => edittoggleModal(agent._id)}
+                          className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-700"
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    </div>
 
-                {/* Mobile Layout */}
-                <div className="lg:hidden space-y-2">
-                  <p className="flex justify-between">
-                    <span className="font-semibold">Name:</span>
-                    {agent?.name || "N/A"}
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="font-semibold">Email:</span>
-                    {agent?.email || "Not Assigned"}
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="font-semibold">Mobile:</span>
-                    <span className="text-blue-400">
-                      {agent?.phone || "N/A"}
-                    </span>
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="font-semibold">Status:</span>
-                    <span
-                      className={`font-semibold ${
-                        agent?.agentStatus ? "text-red-400" : "text-green-400"
-                      }`}
-                    >
-                      {agent?.agentStatus ? "Inactive" : "Active"}
-                    </span>
-                  </p>
-                  <div className="flex justify-between gap-2">
-                    <button
-                      className={`flex-1 px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 text-white ${
-                        agent?.agentStatus
-                          ? "bg-green-600 hover:bg-green-500"
-                          : "bg-red-600 hover:bg-red-500"
-                      }`}
-                      onClick={() => handlestatus(agent._id)}
-                    >
-                      {agent?.agentStatus ? "Unblock" : "Block"}
-                    </button>
-                    <button
-                      onClick={() => edittoggleModal(agent._id)}
-                      className="flex-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-700"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                    {/* Mobile Layout */}
+                    <div className="lg:hidden space-y-2">
+                      <p className="flex justify-between">
+                        <span className="font-semibold">Name:</span>
+                        {agent?.name || "N/A"}
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="font-semibold">Email:</span>
+                        {agent?.email || "Not Assigned"}
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="font-semibold">Mobile:</span>
+                        <span className="text-blue-400">
+                          {agent?.phone || "N/A"}
+                        </span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="font-semibold">Status:</span>
+                        <span
+                          className={`font-semibold ${
+                            agent?.agentStatus
+                              ? "text-red-400"
+                              : "text-green-400"
+                          }`}
+                        >
+                          {agent?.agentStatus ? "Inactive" : "Active"}
+                        </span>
+                      </p>
+                      <div className="flex justify-between gap-2">
+                        <button
+                          className={`flex-1 px-3 py-1 rounded-lg text-sm font-semibold transition duration-300 text-white ${
+                            agent?.agentStatus
+                              ? "bg-green-600 hover:bg-green-500"
+                              : "bg-red-600 hover:bg-red-500"
+                          }`}
+                          onClick={() => handlestatus(agent._id)}
+                        >
+                          {agent?.agentStatus ? "Unblock" : "Block"}
+                        </button>
+                        <button
+                          onClick={() => edittoggleModal(agent._id)}
+                          className="flex-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-semibold transition duration-300 hover:bg-blue-700"
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          //           ) : (
+          //   <p className="flex justify-center pt-[30vh]">No concerns found</p>
+          // )}
         )}
-
       </div>
-//           ) : (
-//   <p className="flex justify-center pt-[30vh]">No concerns found</p>
-// )}
-    )}
-  </div>
 
-  <EditAgentModal
-    iseditOpen={iseditModalOpen}
-    oneditClose={() => setIseditModalOpen(false)}
-    agentDatas={handleEditAgent}
-  />
+      <EditAgentModal
+        iseditOpen={iseditModalOpen}
+        oneditClose={() => setIseditModalOpen(false)}
+        agentDatas={handleEditAgent}
+      />
 
-  <AddAgentModal
-    isOpen={isModalOpen}
-    onClose={() => setIsModalOpen(false)}
-    agentData={handleSaveAgent}
-  />
-</div>
-
+      <AddAgentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        agentData={handleSaveAgent}
+      />
+    </div>
   );
 };
 

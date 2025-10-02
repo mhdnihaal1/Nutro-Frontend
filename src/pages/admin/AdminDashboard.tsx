@@ -13,14 +13,12 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Toaster, toast } from "react-hot-toast";
+// import { Toaster, toast } from "react-hot-toast";
 import AdminSideBar from "../../components/admin/AdminSideBar";
-import { adminLogout } from "../../redux/slices/adminSlice";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import { getOrders, getUsers, getAgents } from "../../api/admin";
-import { ChevronDown, Check } from "lucide-react";
-import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -73,10 +71,10 @@ interface IOrder extends Document {
 }
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [, setSelected] = useState<string | null>(null);
 
   const options = [
     "Revenue",
@@ -85,11 +83,11 @@ const AdminDashboard = () => {
     "Agentdeliveries",
     "Users",
   ];
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setLoading] = useState<boolean>(true);
+  const [, setError] = useState<string | null>(null);
   const [users, setusers] = useState<IUser[]>([]);
-  const [orders, setOrders] = useState<IOrder[]>([]);
-  const [totalSellingPrice, setTotalSellingPrice] = useState<number>(0);
+  const [, setOrders] = useState<IOrder[]>([]);
+  const [, setTotalSellingPrice] = useState<number>(0);
   const [revenueData, setRevenueData] = useState<
     { month: string; revenue: number }[]
   >([]);
@@ -130,7 +128,7 @@ const AdminDashboard = () => {
             (acc: Record<string, number>, elem: any) => {
               if (!elem?.createdAt && typeof elem?.totalPrice !== "number")
                 return acc;
-              if (elem?.status == "delivered") {
+              if (elem?.status === "delivered") {
                 const month = new Date(elem.createdAt).toLocaleString("en-US", {
                   month: "short",
                 });
@@ -161,7 +159,7 @@ const AdminDashboard = () => {
           const monthlyOrders = request?.reduce(
             (acc: Record<string, number>, elem: any, index: any) => {
               if (!elem?.createdAt) return acc;
-              if (elem?.status == "delivered") {
+              if (elem?.status === "delivered") {
                 const month = new Date(elem.createdAt).toLocaleString("en-US", {
                   month: "short",
                 });
@@ -232,15 +230,15 @@ const AdminDashboard = () => {
   const Drop = async (item: string) => {
     setSelected(item);
     let input: any = revenuepdf.current;
-    if (item == "Revenue") {
+    if (item === "Revenue") {
       input = revenuepdf.current;
-    } else if (item == "Order") {
+    } else if (item === "Order") {
       input = orderspdf.current;
-    } else if (item == "Orderdistribution") {
+    } else if (item === "Orderdistribution") {
       input = ditributionpdf.current;
-    } else if (item == "Agentdeliveries") {
+    } else if (item === "Agentdeliveries") {
       input = agentpdf.current;
-    } else if (item == "Users") {
+    } else if (item === "Users") {
       input = userpdf.current;
     }
 

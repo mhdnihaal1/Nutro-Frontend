@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { adminLogout } from "../../redux/slices/adminSlice";
+// import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import { getUsers, UserStatus } from "../../api/admin";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import AdminSideBar from "../../components/admin/AdminSideBar";
 
 interface IUser {
@@ -16,8 +15,8 @@ interface IUser {
 }
 
 const AdminUsers = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
 
   const [User, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,10 +26,8 @@ const AdminUsers = () => {
     const fetchData = async () => {
       try {
         const user = await getUsers();
-        console.log(user);
 
         if (user?.data) {
-          console.log(user?.data);
           const orde = user?.data;
           setUsers(Array.isArray(orde) ? orde : []);
           setLoading(false);
@@ -45,19 +42,17 @@ const AdminUsers = () => {
 
   const handleUserStatus = async (userId: string) => {
     try {
-      console.log(userId);
       const res = await UserStatus(userId);
       if (res) {
-        console.log(res);
         setUsers((prev) =>
-          prev.map((user) => (user._id == userId ? res.data : user))
+          prev.map((user) => (user._id === userId ? res.data : user))
         );
         toast.success("user  status changed successfully.");
       } else {
         toast.error("Failed to delete map.");
       }
     } catch (error) {
-      // console.error("Error deleting map:", error);
+      console.error("Error :", error);
       toast.error("Something went wrong while user status changing .");
     }
   };
@@ -146,18 +141,17 @@ const AdminUsers = () => {
                       <p className="flex justify-between">
                         <span className="font-semibold">Action:</span>{" "}
                         <button
-                        className={`px-3 py-1 items-end rounded-lg text-sm font-semibold transition duration-300 
+                          className={`px-3 py-1 items-end rounded-lg text-sm font-semibold transition duration-300 
                 ${
                   user?.userStatus
                     ? "bg-green-600 hover:bg-green-500 text-white"
                     : "bg-red-600 hover:bg-red-500 text-white"
                 }`}
-                        onClick={() => handleUserStatus(user._id)}
-                      >
-                        {user?.userStatus ? "Unblock" : "Block"}
-                      </button>
+                          onClick={() => handleUserStatus(user._id)}
+                        >
+                          {user?.userStatus ? "Unblock" : "Block"}
+                        </button>
                       </p>
-                      
                     </div>
                   </li>
                 ))}

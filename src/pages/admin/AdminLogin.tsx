@@ -32,7 +32,7 @@ const UserLogin = () => {
     if (adminInfo) {
        navigate("/admin/dashboard");
     }
-  }, [adminInfo]);
+  }, [adminInfo, navigate]);
 
   const validateForm = () => {
     const newErrors: Errors = {};
