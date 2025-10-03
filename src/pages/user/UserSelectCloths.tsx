@@ -66,7 +66,7 @@ const UserSelectCloths = () => {
     const fetchItems = async () => {
       try {
         const response = await getItems();
-              console.log("Fetched items:", response?.data); // <-- deploy this
+              // console.log("Fetched items:", response?.data); // <-- deploy this
 
         setItems(
           Array.isArray(response?.data) ? (response?.data as IClothItem[]) : []
