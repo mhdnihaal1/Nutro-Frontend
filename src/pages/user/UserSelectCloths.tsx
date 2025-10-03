@@ -44,8 +44,7 @@ const UserSelectCloths = () => {
   const [cart, setCart] = useState<Item[]>([]);
   const [service, setServices] = useState<string>("wash");
   const user = useSelector((state: RootState) => state.auth);
-console.log("user:",user)
-  const handleServiceClick = (services: string) => {
+   const handleServiceClick = (services: string) => {
     toast.success(`${services} the cloths`);
     setServices(services);
   };
@@ -83,12 +82,10 @@ console.log("user:",user)
     (item) => item.category === selectedCategory
   );
   const addAllToCart = () => {
-    console.log(123,user,user.userInfo)
-    const allSelectedItems = filteredItems.filter((_, index) =>
+     const allSelectedItems = filteredItems.filter((_, index) =>
       selectedItems[selectedCategory].includes(index)
     );
-console.log(allSelectedItems )
-
+ console.log(selectedItems,allSelectedItems)
     setCart((prevCart) => [
       ...prevCart,
       ...allSelectedItems.map((item,index) => ({
@@ -100,13 +97,14 @@ console.log(allSelectedItems )
         quantity: itemQuantities[item._id] || index,
       })),
     ]);
+    console.log(cart)
 
     setSelectedItems((prev) => ({
       ...prev,
       [selectedCategory]: [],
     }));
   };
-
+console.log(selectedItems)
   const handleQuantityChange = (itemId: number, value: number) => {
     setItemQuantities((prev) => ({
       ...prev,
