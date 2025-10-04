@@ -3,14 +3,15 @@ import React, { useState } from "react";
 interface ConcernModalProps {
   isOpen: boolean;
   onClose: () => void;
-  concern: (concern: {
-    subject: string;
-    summary: string;
-  }) => void;
+  concern: (concern: { subject: string; summary: string }) => void;
 }
 
-const ConcernModal: React.FC<ConcernModalProps> = ({ isOpen, onClose, concern }) => {
-    const [subject, setSubject] = useState("");
+const ConcernModal: React.FC<ConcernModalProps> = ({
+  isOpen,
+  onClose,
+  concern,
+}) => {
+  const [subject, setSubject] = useState("");
   const [summary, setSummary] = useState("");
 
   if (!isOpen) return null;
@@ -22,35 +23,33 @@ const ConcernModal: React.FC<ConcernModalProps> = ({ isOpen, onClose, concern })
     "Payment Issue",
     "Wrong service",
     "Agent misbehave",
-    "Others"
+    "Others",
   ];
 
   const submitHandler = async () => {
-
     await concern({ subject, summary });
     setSubject("");
     setSummary("");
-  
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[400px]">
         <h2 className="text-xl font-semibold mb-4">Submit Your Concern</h2>
-        
-       {/* Dropdown */}
-       <select
-              className="w-full p-2 border rounded-md mb-3"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            >
-              <option value="">Select a concern...</option>
-              {concernOptions.map((concern, index) => (
-                <option key={index} value={concern}>
-                  {concern}
-                </option>
-              ))}
-            </select>
+
+        {/* Dropdown */}
+        <select
+          className="w-full p-2 border rounded-md mb-3"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+        >
+          <option value="">Select a concern...</option>
+          {concernOptions.map((concern, index) => (
+            <option key={index} value={concern}>
+              {concern}
+            </option>
+          ))}
+        </select>
 
         <textarea
           className="w-full p-2 border rounded-md"
@@ -61,14 +60,17 @@ const ConcernModal: React.FC<ConcernModalProps> = ({ isOpen, onClose, concern })
         ></textarea>
 
         <div className="mt-4 flex justify-end space-x-2">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-400 text-white rounded-md">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-400 text-white rounded-md"
+          >
             Cancel
           </button>
-          <button 
+          <button
             onClick={() => {
-                submitHandler();
+              submitHandler();
               onClose();
-            }} 
+            }}
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
             Submit

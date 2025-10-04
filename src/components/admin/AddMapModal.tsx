@@ -1,12 +1,12 @@
 import React, { FormEvent, useState } from "react";
 
-interface IMap {
-  sl_no: string;
-  place: string;
-  pincode: string;
-  latitude: string;
-  longitude: string;
-}
+// interface IMap {
+//   sl_no: string;
+//   place: string;
+//   pincode: string;
+//   latitude: string;
+//   longitude: string;
+// }
 interface AddMapModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,7 +34,7 @@ const AddMapModal: React.FC<AddMapModalProps> = ({
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await mapData({ sl_no, place, pincode, latitude, longitude });
-    console.log("res",res)
+    console.log("res", res);
     setSl_no("");
     setPlace("");
     setPincode("");

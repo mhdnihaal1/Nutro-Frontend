@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa"; // User icon if no picture
 import { RootState } from "../../redux/store";
 import { userLogout } from "../../redux/slices/authSlice";
@@ -12,11 +12,9 @@ const ProfilePage = () => {
 
   const user = useSelector((state: RootState) => state.auth);
   const User = user?.userInfo;
-  console.log(User);
-
+ 
   const logout = async () => {
-    console.log(123);
-    dispatch(userLogout());
+     dispatch(userLogout());
     navigate("/user/login");
   };
   return (

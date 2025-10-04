@@ -54,13 +54,13 @@ const UserContact = () => {
               <p className="text-gray-500">Sunday: Closed</p>
             </div>
             <div className="flex space-x-4 text-xl">
-              <a href="#" className="text-blue-600 hover:text-blue-800">
+              <a href="/" className="text-blue-600 hover:text-blue-800">
                 <FaFacebook />
               </a>
-              <a href="#" className="text-blue-400 hover:text-blue-600">
+              <a href="/" className="text-blue-400 hover:text-blue-600">
                 <FaTwitter />
               </a>
-              <a href="#" className="text-pink-500 hover:text-pink-700">
+              <a href="/" className="text-pink-500 hover:text-pink-700">
                 <FaInstagram />
               </a>
             </div>
@@ -132,8 +132,7 @@ const UserContact = () => {
           </div>
         </div>
       </div>
-      <UserFooter/>
-
+      <UserFooter />
     </div>
   );
 };

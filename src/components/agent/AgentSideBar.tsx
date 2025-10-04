@@ -4,23 +4,16 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaBars, FaTimes } from "react-icons/fa";
 import {
-  LayoutDashboard,
-  ShoppingCart,
   Users as UsersIcon,
   UserCog,
   Map,
-  Package,
-  CheckCircle ,
-   AlertCircle, ThumbsUp, PlusCircle, PackageCheck,
+  PlusCircle,
   Clock,
   Key,
-  Tag,
-  Wrench,
-  MessageCircle,
-  CheckSquare ,
+  CheckSquare,
   Settings as SettingsIcon,
   LogOut,
-  LucideIcon,  
+  LucideIcon,
 } from "lucide-react";
 
 type LinkItem = {
@@ -58,7 +51,6 @@ const AdminSideBar = () => {
   const Settings = () => {
     navigate(`/agent/Settings`);
   };
-  
 
   const logout = async () => {
     dispatch(agentLogout());
@@ -67,12 +59,12 @@ const AdminSideBar = () => {
 
   const links: LinkItem[] = [
     { to: "/agent/newOrders", icon: Clock, label: "ToNewPage" },
-    { to: "/agent/acceptedOrders", icon: PlusCircle , label: "ToAcceptPage" },
-    { to: "/agent/orderHistory", icon: CheckSquare , label: "ToHistoryPage" },
+    { to: "/agent/acceptedOrders", icon: PlusCircle, label: "ToAcceptPage" },
+    { to: "/agent/orderHistory", icon: CheckSquare, label: "ToHistoryPage" },
     { to: "/agent/profile", icon: UserCog, label: "profile" },
     { to: "/agent/changePassword", icon: Key, label: "changePassword" },
     { to: "/agent/map", icon: Map, label: "map" },
-    { to: "/agent/settings", icon: SettingsIcon, label: "Settings" } 
+    { to: "/agent/settings", icon: SettingsIcon, label: "Settings" },
   ];
 
   return (
@@ -111,13 +103,13 @@ const AdminSideBar = () => {
               onClick={changePassword}
               className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
             >
-               Password Change
+              Password Change
             </a>
             <a
               onClick={map}
               className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
             >
-             My Map
+              My Map
             </a>
             <a
               onClick={Settings}
@@ -147,7 +139,6 @@ const AdminSideBar = () => {
       </div>
       {isOpen && (
         <div className="md:hidden h-full w-16 bg-gray-900 flex flex-col items-center py-4 space-y-6 shadow-lg fixed left-0 top-0">
-           
           <div className="w-10 h-10 bg-blue-600 flex items-center justify-center rounded-lg">
             <span
               className="text-white font-bold text-lg"

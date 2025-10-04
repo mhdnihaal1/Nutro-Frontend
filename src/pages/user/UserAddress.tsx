@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaShoppingCart, FaUserCircle } from "react-icons/fa"; // Using react-icons
+// import { FaShoppingCart, FaUserCircle } from "react-icons/fa"; // Using react-icons
 import { Toaster, toast } from "react-hot-toast";
 import { AddAddress } from "../../api/user";
 import { useSelector } from "react-redux";
@@ -72,8 +72,6 @@ const AddressPage = () => {
   }) => {
     try {
       const res = await AddAddress(addressData);
-
-   
 
       if (res?.data?.addresses && typeof res?.data !== "string" ) {
         const address = res?.data?.addresses;

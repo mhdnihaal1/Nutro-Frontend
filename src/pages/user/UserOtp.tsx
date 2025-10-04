@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../redux/slices/authSlice";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { otpVerify } from "../../api/user";
 
 const UserOtp = () => {

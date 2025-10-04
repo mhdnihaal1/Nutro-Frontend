@@ -1,7 +1,7 @@
 import axios from "axios";
 import errorHandle from "../api/error";
 
-const BASE_URL = "https://nutro-backend.onrender.com/api" ;
+const BASE_URL = "https://nutro-backend.onrender.com/api";
 //  const BASE_URL = "http://localhost:8000/api";
 
 const Api = axios.create({
@@ -24,8 +24,8 @@ Api.interceptors.response.use(
 Api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-    
-    if (token && token !== "null" && token !== "undefined") { 
+
+    if (token && token !== "null" && token !== "undefined") {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

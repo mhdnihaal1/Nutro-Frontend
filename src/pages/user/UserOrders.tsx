@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { getOrders } from "../../api/user";
 import { RootState } from "redux/store";
 import { useSelector } from "react-redux";
 import { X, CheckCircle } from "lucide-react";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import UserConcerns from "../../components/user/UserConcerns";
-import { sendConcern , handleCancelorder} from "../../api/user";
+import { sendConcern, handleCancelorder } from "../../api/user";
 
 interface IAgent {
   name: string;
@@ -78,7 +78,7 @@ const UserOrders = () => {
 
   const user = useSelector((state: RootState) => state.auth);
   const UserId = user?.userInfo._id;
-  const UserEmail = user?.userInfo.email;
+  // const UserEmail = user?.userInfo.email;
   const orderStatusSteps = [
     { status: "orderPlaced", label: "Order Placed" },
     { status: "orderConfirmed", label: "Order Confirmed" },
@@ -107,23 +107,22 @@ const UserOrders = () => {
   const handleCancelOrder = async (orderId: string) => {
     try {
       const response = await handleCancelorder(orderId);
-  
+
       if (response?.data) {
         const updatedOrder = response.data;
-  
-        setOrders((prevOrders: any) => 
-          [...prevOrders.map((order: any) => 
+
+        setOrders((prevOrders: any) => [
+          ...prevOrders.map((order: any) =>
             order._id === orderId ? { ...order, status: "cancelled" } : order
-          )]
+          ),
+        ]);
+
+        setSelectedOrder((prevOrder: IOrder | null) =>
+          prevOrder?._id === updatedOrder._id
+            ? { ...updatedOrder, status: "cancelled" }
+            : prevOrder
         );
-  
-        setSelectedOrder((prevOrder: IOrder | null) => 
-          prevOrder?._id === updatedOrder._id ? { ...updatedOrder, status: "cancelled" } : prevOrder
-        );
-        
-        
-        
-  
+
         toast.success("Order cancelled successfully!");
       } else {
         toast.error("Failed to cancel order");
@@ -132,18 +131,15 @@ const UserOrders = () => {
       toast.error("Something went wrong");
     }
   };
-  
-  
 
   const handleSubmitConcern = async (concern: {
     subject: string;
     summary: string;
   }) => {
-    console.log("User Concern:", concern, UserEmail);
     try {
-      const email = UserEmail;
+      // const email = UserEmail;
       const { subject, summary } = concern;
-      const Datas = { email, subject, summary };
+      // const Datas = { email, subject, summary };
 
       const response = await sendConcern(UserId, subject, summary);
       if (response?.data) {
@@ -211,7 +207,9 @@ const UserOrders = () => {
                     .map((item) => `${item.name} x${item.quantity}`)
                     .join(", ")}
                 </p>
-                <p className="text-gray-600">Payment Method: {order.paymentMethod}</p>
+                <p className="text-gray-600">
+                  Payment Method: {order.paymentMethod}
+                </p>
 
                 <p className="text-gray-600">Total: ${order.totalPrice}</p>
               </div>
@@ -279,8 +277,9 @@ const UserOrders = () => {
               <p>
                 <strong>Delivery Mode:</strong> {selectedOrder.deliveryMode}
               </p>
-              <p ><strong>Payment Method: </strong> {selectedOrder.paymentMethod}</p>
-
+              <p>
+                <strong>Payment Method: </strong> {selectedOrder.paymentMethod}
+              </p>
 
               {selectedOrder.agentId && (
                 <div className="mt-4">
@@ -330,56 +329,56 @@ const UserOrders = () => {
               <h3 className="text-lg font-semibold mb-4">Order Status</h3>
 
               {orderStatusSteps
-  .filter((step) => 
-    selectedOrder.status === "cancelled"
-      ? step.status === "orderPlaced" || step.status === "cancelled"
-      : selectedOrder.status === "delivered"
-      ? step.status !== "cancelled" // Remove "Cancelled" when delivered
-      : true
-  )
-  .map((step, index) => {
-    const isActive = step.status === selectedOrder.status; // Only highlight the current status
+                .filter((step) =>
+                  selectedOrder.status === "cancelled"
+                    ? step.status === "orderPlaced" ||
+                      step.status === "cancelled"
+                    : selectedOrder.status === "delivered"
+                    ? step.status !== "cancelled" // Remove "Cancelled" when delivered
+                    : true
+                )
+                .map((step, index) => {
+                  const isActive = step.status === selectedOrder.status; // Only highlight the current status
 
-    return (
-      <div key={step.status} className="flex items-start relative mb-4">
-        {index !== orderStatusSteps.length - 1 && (
-          <div
-            className={`absolute left-3 top-6 h-8 w-[2px] ${
-              isActive ? "bg-green-500" : "bg-gray-300"
-            }`}
-          ></div>
-        )}
+                  return (
+                    <div
+                      key={step.status}
+                      className="flex items-start relative mb-4"
+                    >
+                      {index !== orderStatusSteps.length - 1 && (
+                        <div
+                          className={`absolute left-3 top-6 h-8 w-[2px] ${
+                            isActive ? "bg-green-500" : "bg-gray-300"
+                          }`}
+                        ></div>
+                      )}
 
-        <div
-          className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
-            isActive
-              ? "bg-green-500 text-white border-green-500"
-              : "bg-gray-200 text-gray-500 border-gray-300"
-          }`}
-        >
-          {isActive ? (
-            <CheckCircle className="w-4 h-4" />
-          ) : (
-            <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-          )}
-        </div>
-          
-        <div className="ml-4">
-          <p
-            className={`text-lg font-semibold ${
-              isActive ? "text-green-700" : "text-gray-500"
-            }`}
-          >
-            {step.label}
-          </p>
-        </div>
-      </div>
-    );
-  })}
+                      <div
+                        className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
+                          isActive
+                            ? "bg-green-500 text-white border-green-500"
+                            : "bg-gray-200 text-gray-500 border-gray-300"
+                        }`}
+                      >
+                        {isActive ? (
+                          <CheckCircle className="w-4 h-4" />
+                        ) : (
+                          <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                        )}
+                      </div>
 
-
-
-
+                      <div className="ml-4">
+                        <p
+                          className={`text-lg font-semibold ${
+                            isActive ? "text-green-700" : "text-gray-500"
+                          }`}
+                        >
+                          {step.label}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

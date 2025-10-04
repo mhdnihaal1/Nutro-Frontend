@@ -33,8 +33,8 @@ const EditAgentModal: React.FC<AddAgentModalProps> = ({
   agentDatas,
 }) => {
   const [maps, setMaps] = useState<Map[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setLoading] = useState<boolean>(true);
+  const [, setError] = useState<string | null>(null);
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");

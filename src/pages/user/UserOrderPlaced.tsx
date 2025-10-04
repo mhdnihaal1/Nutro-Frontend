@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 const UserOrderPlaced = () => {
   const location = useLocation();
   const orderData = location.state?.orderData;
-  console.log(orderData);
 
   const navigate = useNavigate();
 

@@ -51,7 +51,9 @@ const UserLogin = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const submitHandler = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const submitHandler = async (
+    e: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     const isValid = validateForm();
 
@@ -61,17 +63,18 @@ const UserLogin = () => {
         password: password,
       };
 
- 
       try {
         const response = await login(data);
-        console.log(123,response )
-        if (response?.data?.status !== 400 && response?.data !== "Authorization header missing or invalid") {
+        if (
+          response?.data?.status !== 400 &&
+          response?.data !== "Authorization header missing or invalid"
+        ) {
           localStorage.setItem("token", response?.data?.data?.token);
-          dispatch(setAgentCredentials(response?.data?.data?.message)); 
+          dispatch(setAgentCredentials(response?.data?.data?.message));
           toast.success("Login successful!");
           navigate("/agent/newOrders");
         } else {
-          toast.error(response?.data  || "Invalid credentials");
+          toast.error(response?.data || "Invalid credentials");
         }
       } catch (error) {
         toast.error("Invalid credentials. Please try again.");
@@ -89,7 +92,10 @@ const UserLogin = () => {
         <form onSubmit={submitHandler}>
           {/* Email Input */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Email Address
             </label>
             <input
@@ -100,12 +106,17 @@ const UserLogin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
           {/* Password Input */}
           <div className="mb-6 relative">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Password
             </label>
             <input
@@ -121,9 +132,15 @@ const UserLogin = () => {
               onClick={handlePasswordVisibility}
               className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
             >
-              {showPassword ? <IoEyeOffSharp size={20} /> : <IoEyeSharp size={20} />}
+              {showPassword ? (
+                <IoEyeOffSharp size={20} />
+              ) : (
+                <IoEyeSharp size={20} />
+              )}
             </button>
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
 
           {/* Login Button */}
@@ -139,7 +156,10 @@ const UserLogin = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Forgot your password?{" "}
-            <Link to="/forgot-password" className="text-blue-600 hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 hover:underline"
+            >
               Reset it here
             </Link>
           </p>

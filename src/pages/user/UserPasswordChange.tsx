@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { RootState } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { changePassword } from "../../api/user";
 import toast from "react-hot-toast";
 
@@ -22,7 +22,7 @@ const UserPasswordChange = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [user, setUser] = useState<IUser>();
+  const [, setUser] = useState<IUser>();
 
   const user1 = useSelector((state: RootState) => state.auth);
   const UserId = user1?.userInfo?._id;
@@ -34,7 +34,7 @@ const UserPasswordChange = () => {
     if (typeof res?.data === "string") {
       toast.error(res?.data);
       return;
-  }
+    }
     if (res?.data._id) {
       setUser(res?.data);
       toast.success("Password changed successfully");

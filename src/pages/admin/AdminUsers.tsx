@@ -42,9 +42,7 @@ const AdminUsers = () => {
 
   const handleUserStatus = async (userId: string) => {
     try {
-      console.log(userId)
       const res = await UserStatus(userId);
-      console.log(res)
       if (res) {
         setUsers((prev) =>
           prev.map((user) => (user._id === userId ? res.data : user))

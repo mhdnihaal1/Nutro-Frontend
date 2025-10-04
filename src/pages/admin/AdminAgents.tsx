@@ -122,7 +122,7 @@ const AdminAgents: React.FC = () => {
   const handlestatus = async (agentId: string) => {
     try {
       const res = await agentStatus(agentId);
-       if (res) {
+      if (res) {
         setAgents((prev) =>
           prev.map((agent) => (agent._id === agentId ? res?.data : agent))
         );

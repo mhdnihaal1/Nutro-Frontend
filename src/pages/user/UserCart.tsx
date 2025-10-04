@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCart, deleteCartItem, quantityChange } from "../../api/user";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { Plus, Minus } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
@@ -33,9 +33,8 @@ const CartPage: React.FC = () => {
     const fetchCart = async () => {
       try {
         const res = await getCart(User);
-       
+
         if (res?.data?.items) {
-          console.log(res?.data?.items);
           const items = res?.data?.items;
 
           setCart(Array.isArray(items) ? (items as CartItem[]) : []);
@@ -100,15 +99,14 @@ const CartPage: React.FC = () => {
       if (typeof res?.data === "string") {
         toast.error(res?.data);
         return;
-    }
-    
+      }
+
       if (res?.data?.items) {
         const items = res?.data?.items;
         setCart(Array.isArray(items) ? (items as CartItem[]) : []);
       } else {
         console.warn("No updated cart data received from API");
       }
-      console.log("item deleted");
       toast.success("delete CartItem successfully");
     } catch (error) {
       console.error("Failed to fetch cart:", error);
@@ -119,10 +117,10 @@ const CartPage: React.FC = () => {
     try {
       let res = await quantityChange(cartItemId, action, User);
 
-      if (typeof res?.data === "string") { 
+      if (typeof res?.data === "string") {
         toast.error(res?.data);
         return;
-    }
+      }
 
       if (res?.data?.items) {
         const items = res?.data?.items;
@@ -130,7 +128,6 @@ const CartPage: React.FC = () => {
       } else {
         console.warn("No updated cart data received from API");
       }
-      console.log("quantity changed");
       toast.success("quantityChange CartItem successfully");
     } catch (error) {
       console.log(error);

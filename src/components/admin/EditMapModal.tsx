@@ -1,12 +1,12 @@
 import React, { FormEvent, useState } from "react";
 
-interface IMap {
-  sl_no: string;
-  place: string;
-  pincode: string;
-  latitude: string;
-  longitude: string;
-}
+// interface IMap {
+//   sl_no: string;
+//   place: string;
+//   pincode: string;
+//   latitude: string;
+//   longitude: string;
+// }
 interface AddMapModalProps {
   iseditOpen: boolean;
   oneditClose: () => void;

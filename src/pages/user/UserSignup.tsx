@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Toaster, toast } from "react-hot-toast";
+// import { useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
 import { signup } from "../../api/user";
@@ -74,7 +74,7 @@ const UserSignup = () => {
         };
 
         const response = await signup(userData);
-        if (response?.data?.success == true) {
+        if (response?.data?.success === true) {
           toast.success(response.data.message);
           navigate("/user/otp", {
             state: {

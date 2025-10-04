@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faBolt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { ArrowLeft } from "lucide-react";
 import GooglePayButton from "@google-pay/button-react";
 
@@ -42,12 +42,12 @@ interface IDeliveryMode {
   rate: number;
 }
 
-interface Order {
-  userId: string;
-  address: string;
-  totalPrice: number;
-  deliveryMode: string;
-}
+// interface Order {
+//   userId: string;
+//   address: string;
+//   totalPrice: number;
+//   deliveryMode: string;
+// }
 
 const UserOrderConfirmation: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -61,12 +61,12 @@ const UserOrderConfirmation: React.FC = () => {
   const navigate = useNavigate();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const [order, setOrder] = useState<Order>({
-    userId: userId,
-    address: "",
-    totalPrice: 0,
-    deliveryMode: "",
-  });
+  // const [order, setOrder] = useState<Order>({
+  //   userId: userId,
+  //   address: "",
+  //   totalPrice: 0,
+  //   deliveryMode: "",
+  // });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,9 +95,10 @@ const UserOrderConfirmation: React.FC = () => {
       total + item.clothItemId.prices[item.service] * item.quantity,
     0
   );
-  let grandTotal = selectedMode == "default" ? cartTotal + 4.99 + 1 : cartTotal + 8.99 + 1;
-  grandTotal = Number(grandTotal.toFixed(2)); 
-  
+  let grandTotal =
+    selectedMode === "default" ? cartTotal + 4.99 + 1 : cartTotal + 8.99 + 1;
+  grandTotal = Number(grandTotal.toFixed(2));
+
   const setselectedAddress = async (index: any) => {
     setSelectedAddress(index);
   };
@@ -137,9 +138,9 @@ const UserOrderConfirmation: React.FC = () => {
       if (typeof res?.data === "string") {
         toast.error(res?.data);
         return;
-    }
+      }
 
-      if (res?.data?.status == "orderPlaced") {
+      if (res?.data?.status === "orderPlaced") {
         navigate("/user/orderplaced", { state: { orderData: res?.data } });
 
         toast.success("Order placed successfully!");
@@ -163,30 +164,19 @@ const UserOrderConfirmation: React.FC = () => {
   };
 
   const Payment = async (paymeth: string) => {
-    if(paymeth == "COD"){
-console.log('hiii')
-setPaymentMethod(paymeth)
-toast.success("Payment method added!");
-
-    }else{
-    
-    
+    if (paymeth === "COD") {
+      setPaymentMethod(paymeth);
+      toast.success("Payment method added!");
+    } else {
       // Show only the selected payment method
       const selectedMethod = document.getElementById(paymeth);
       if (selectedMethod) {
         selectedMethod.classList.toggle("hidden");
       }
     }
-  
   };
-  
-  
 
   const handleGooglePayClick = () => {
-    console.log("Google Pay Button Clicked!");
-  
-
-  
     const paymentDataRequest = {
       apiVersion: 2,
       apiVersionMinor: 0,
@@ -195,42 +185,36 @@ toast.success("Payment method added!");
           type: "CARD",
           parameters: {
             allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-            allowedCardNetworks: ["MASTERCARD", "VISA", "AMEX", "DISCOVER"]
+            allowedCardNetworks: ["MASTERCARD", "VISA", "AMEX", "DISCOVER"],
           },
           tokenizationSpecification: {
             type: "PAYMENT_GATEWAY",
             parameters: {
               gateway: "example",
-              gatewayMerchantId: "stripe_test_merchant"
-            }
-          }
-        }
+              gatewayMerchantId: "stripe_test_merchant",
+            },
+          },
+        },
       ],
       merchantInfo: {
         merchantId: "98765432101234567890",
-        merchantName: "Demo Merchant"
+        merchantName: "Demo Merchant",
       },
       transactionInfo: {
         totalPriceStatus: "FINAL",
         totalPriceLabel: "Total",
         totalPrice: grandTotal.toString(),
         currencyCode: "USD",
-        countryCode: "US"
+        countryCode: "US",
       },
       shippingAddressRequired: false,
-      callbackIntents: ["PAYMENT_AUTHORIZATION"]
+      callbackIntents: ["PAYMENT_AUTHORIZATION"],
     };
 
-    if(paymentDataRequest){
-      setPaymentMethod("GooglePay")
+    if (paymentDataRequest) {
+      setPaymentMethod("GooglePay");
     }
-  
-    console.log("Payment Request Created:", paymentDataRequest);
-    
-    // Here, you can manually trigger Google Pay if needed.
   };
-  
-  
 
   const addres = () => {
     navigate("/user/address");
@@ -334,12 +318,12 @@ toast.success("Payment method added!");
                         <button
                           onClick={() => setselectedAddress(index)}
                           className={`px-3 py-1 text-sm rounded-md transition-all ${
-                            selectedAddress == index.toString()
+                            selectedAddress === index.toString()
                               ? "bg-green-600 text-white"
                               : "bg-blue-500 text-white hover:bg-blue-600"
                           }`}
                         >
-                          {selectedAddress == index.toString()
+                          {selectedAddress === index.toString()
                             ? "Selected"
                             : "Select"}
                         </button>
@@ -444,7 +428,7 @@ toast.success("Payment method added!");
                     <tr className="border-b font-semibold text-black">
                       <td className="py-2">Delivery exp</td>
                       <td className="text-right py-2">
-                        ${selectedMode == "default" ? 4.99 : 8.99}
+                        ${selectedMode === "default" ? 4.99 : 8.99}
                       </td>
                     </tr>
                     <tr className="font-semibold text-black">
@@ -458,58 +442,58 @@ toast.success("Payment method added!");
                   </tbody>
                 </table>
                 <div className="flex justify-center items-center m-4">
-  <GooglePayButton
-    environment="TEST"
-    paymentRequest={{
-      apiVersion: 2,
-      apiVersionMinor: 0,
-      allowedPaymentMethods: [
-        {
-          type: "CARD",
-          parameters: {
-            allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-            allowedCardNetworks: ["MASTERCARD", "VISA", "AMEX", "DISCOVER"]
-          },
-          tokenizationSpecification: {
-            type: "PAYMENT_GATEWAY",
-            parameters: {
-              gateway: "example",
-              gatewayMerchantId: "stripe_test_merchant"
-            }
-          }
-        }
-      ],
-      merchantInfo: {
-        merchantId: "98765432101234567890",
-        merchantName: "Demo Merchant"
-      },
-      transactionInfo: {
-        totalPriceStatus: "FINAL",
-        totalPriceLabel: "Total",
-        totalPrice: grandTotal.toString(),
-        currencyCode: "USD",
-        countryCode: "US"
-      },
-      shippingAddressRequired: false,
-      callbackIntents: ["PAYMENT_AUTHORIZATION"]
-    }}
-    onClick={handleGooglePayClick} // Attaching the function here
-    onLoadPaymentData={(paymentRequest) => {
-      // console.log("Payment Request Loaded:", paymentRequest);
-    }}
-    onPaymentAuthorized={(paymentData) => {
-      // console.log("Payment Authorized:", paymentData);
-      return { transactionState: "SUCCESS" };
-    }}
-    existingPaymentMethodRequired={false}
-    buttonColor="black"
-    buttonType="buy"
-    className="rounded-lg shadow-md"
-  />
-</div>
-
-
-
+                  <GooglePayButton
+                    environment="TEST"
+                    paymentRequest={{
+                      apiVersion: 2,
+                      apiVersionMinor: 0,
+                      allowedPaymentMethods: [
+                        {
+                          type: "CARD",
+                          parameters: {
+                            allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+                            allowedCardNetworks: [
+                              "MASTERCARD",
+                              "VISA",
+                              "AMEX",
+                              "DISCOVER",
+                            ],
+                          },
+                          tokenizationSpecification: {
+                            type: "PAYMENT_GATEWAY",
+                            parameters: {
+                              gateway: "example",
+                              gatewayMerchantId: "stripe_test_merchant",
+                            },
+                          },
+                        },
+                      ],
+                      merchantInfo: {
+                        merchantId: "98765432101234567890",
+                        merchantName: "Demo Merchant",
+                      },
+                      transactionInfo: {
+                        totalPriceStatus: "FINAL",
+                        totalPriceLabel: "Total",
+                        totalPrice: grandTotal.toString(),
+                        currencyCode: "USD",
+                        countryCode: "US",
+                      },
+                      shippingAddressRequired: false,
+                      callbackIntents: ["PAYMENT_AUTHORIZATION"],
+                    }}
+                    onClick={handleGooglePayClick} // Attaching the function here
+                    onLoadPaymentData={(paymentRequest) => {
+                     }}
+                    onPaymentAuthorized={(paymentData) => {
+                        return { transactionState: "SUCCESS" };
+                    }}
+                    existingPaymentMethodRequired={false}
+                    buttonColor="black"
+                    buttonType="buy"
+                    className="rounded-lg shadow-md"
+                  />
+                </div>
 
                 {[
                   { id: "GooglePay", title: "GooglePay" },
@@ -520,7 +504,7 @@ toast.success("Payment method added!");
                     <h3 className="text-lg font-medium text-black">
                       <button
                         className="w-full text-left focus:outline-none"
-                        onClick={() => Payment(payment.id) }
+                        onClick={() => Payment(payment.id)}
                       >
                         {payment.title}
                       </button>

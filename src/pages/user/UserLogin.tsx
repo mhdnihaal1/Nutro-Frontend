@@ -5,7 +5,7 @@ import validator from "validator";
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 import { setCredentials } from "../../redux/slices/authSlice";
 import { RootState } from "../../redux/store";
-import { login ,sendEmail} from "../../api/user";
+import { login, sendEmail } from "../../api/user";
 import { Toaster, toast } from "react-hot-toast";
 
 interface Errors {
@@ -19,17 +19,15 @@ const UserLogin = () => {
 
   let { userInfo } = useSelector((state: RootState) => state.auth);
 
-  const [email, setEmail] = useState<string>(""); 
-  const [otp, setOtp] = useState<string>("");  
-  const [userOtp, setUserOtp] = useState<string>("");  
-  const [errorotp, setErrorotp] = useState("");
-
+  const [email, setEmail] = useState<string>("");
+  const [otp, setOtp] = useState<string>("");
+  const [userOtp, setUserOtp] = useState<string>("");
+  const [errorotp] = useState("");
 
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errors, setErrors] = useState<Errors>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -72,7 +70,6 @@ const UserLogin = () => {
       const response = await login(data);
 
       if (response?.data?.status !== 400) {
-
         localStorage.setItem("token", response?.data?.data?.token);
 
         dispatch(setCredentials(response?.data?.data?.message));
@@ -88,71 +85,56 @@ const UserLogin = () => {
     }
   };
 
-
   function generateOTP(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
-  
   const forgetPassword = async () => {
-    if(!email){
-      toast.error("Please enter your email and click login")
+    if (!email) {
+      toast.error("Please enter your email and click login");
       return;
     }
-    const otps = generateOTP()
+    const otps = generateOTP();
 
-    setOtp(otps)
-    console.log(otps)
+    setOtp(otps);
 
-    setIsModalOpen(true)
+    setIsModalOpen(true);
 
-
-        const res = await sendEmail(email,otps)
-        console.log(res)
-        if (res) {
-          toast.success("Email sended successful!");
-        } else {
-          toast.error(res);
-        }
-
-  }
+    const res = await sendEmail(email, otps);
+    if (res) {
+      toast.success("Email sended successful!");
+    } else {
+      toast.error("Error is happening");
+    }
+  };
 
   // for submit
 
   const handleVerifyOtp = async () => {
-console.log(userOtp,otp)
-    if(userOtp == otp){
-      navigate("/user/")
+    if (userOtp === otp) {
+      navigate("/user/");
       navigate("/user/forgetPassword", {
         state: {
           email: email,
         },
       });
-    }else{
+    } else {
       toast.error("Wrong otp entered");
-
     }
+  };
 
-  }
-
-  // for resend
-
-  const resendOtp= async ()=>{
-    const ot = generateOTP()
-    setOtp(ot)
-    console.log(ot)
-    const res = await sendEmail(email,ot)
-    console.log(res)
-
+  const resendOtp = async () => {
+    const ot = generateOTP();
+    setOtp(ot);
+    const res = await sendEmail(email, ot);
     if (res) {
-  
       toast.success("Re-send Email sended successful!");
     } else {
-      toast.error(res);
+      toast.error("Error is happening");
     }
 
     //email send later
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -162,7 +144,6 @@ console.log(userOtp,otp)
           Welcome Back!
         </h1>
         <form onSubmit={submitHandler}>
-          
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -223,7 +204,6 @@ console.log(userOtp,otp)
         </form>
 
         <div className="mt-6 text-center">
-         
           <p className="text-sm text-gray-600 mt-2">
             Don’t have an account?{" "}
             <Link to="/user/signup" className="text-blue-600 hover:underline">
@@ -241,44 +221,52 @@ console.log(userOtp,otp)
           </p>
         </div>
         {isModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-gray-800 p-6 rounded-lg shadow-md w-[400px] min-h-[200px]">
-    <h2 className="text-xl font-bold mb-4 text-white text-center">Enter OTP</h2>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-gray-800 p-6 rounded-lg shadow-md w-[400px] min-h-[200px]">
+              <h2 className="text-xl font-bold mb-4 text-white text-center">
+                Enter OTP
+              </h2>
 
-<label className="block mb-2 text-white text-center">Enter the 6-digit OTP</label>
-      <input
-        type="text"
-        maxLength={6}
-        value={userOtp}
-        onChange={(e) => setUserOtp(e.target.value)}
-        className="w-full p-2 rounded bg-gray-700 text-white text-center tracking-widest"
-      />
+              <label className="block mb-2 text-white text-center">
+                Enter the 6-digit OTP
+              </label>
+              <input
+                type="text"
+                maxLength={6}
+                value={userOtp}
+                onChange={(e) => setUserOtp(e.target.value)}
+                className="w-full p-2 rounded bg-gray-700 text-white text-center tracking-widest"
+              />
 
-      {errorotp && <p className="text-red-500 text-sm mt-2">{errorotp}</p>}
+              {errorotp && (
+                <p className="text-red-500 text-sm mt-2">{errorotp}</p>
+              )}
 
+              <button
+                onClick={handleVerifyOtp}
+                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded"
+              >
+                Verify OTP
+              </button>
 
-      <button
-        onClick={handleVerifyOtp}
-        className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded"
-      >
-        Verify OTP
-      </button>
-
-      <button
-        onClick={() => setIsModalOpen(false)}
-        className="mt-2 w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded"
-      >
-        Cancel
-      </button>
-      <p className="text-sm  text-white text-center text-gray-600 mt-2">
-            Re-send otp?{" "}
-            <span onClick={resendOtp} className="text-blue-600 hover:underline">
-              Click Here
-            </span>
-          </p>
-    </div>
-  </div>
-)}
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="mt-2 w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded"
+              >
+                Cancel
+              </button>
+              <p className="text-sm  text-center text-gray-600 mt-2">
+                Re-send otp?{" "}
+                <span
+                  onClick={resendOtp}
+                  className="text-blue-600 hover:underline"
+                >
+                  Click Here
+                </span>
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

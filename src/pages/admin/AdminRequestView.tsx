@@ -10,8 +10,6 @@ const AgentRequestDetails = () => {
   const navigate = useNavigate();
   const order = location.state?.orderData;
 
-  console.log(order);
-
   const agent = useSelector((state: RootState) => state.agentAuth);
   const Agent = agent?.agentInfo;
 

@@ -1,7 +1,7 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getItems, AddToCart } from "../../api/user";
-import { Info } from "lucide-react";
-import { Toaster, toast } from "react-hot-toast";
+// import { Info } from "lucide-react";
+import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import UserNavbar from "../../components/user/UserNavbar";
 import UserFooter from "../../components/user/UserFooter";
 
 type Category = "Men" | "Women" | "Kid" | "General";
-type Service = "wash" | "dryClean" | "iron";
+// type Service = "wash" | "dryClean" | "iron";
 
 interface Item {
   userId: string;
@@ -66,8 +66,7 @@ const UserSelectCloths = () => {
     const fetchItems = async () => {
       try {
         const response = await getItems();
-              // console.log("Fetched items:", response?.data); // <-- deploy this
-
+ 
         setItems(
           Array.isArray(response?.data) ? (response?.data as IClothItem[]) : []
         );
@@ -85,8 +84,7 @@ const UserSelectCloths = () => {
      const allSelectedItems = filteredItems.filter((_, index) =>
       selectedItems[selectedCategory].includes(index)
     );
- console.log(selectedItems,allSelectedItems)
-    setCart((prevCart) => [
+     setCart((prevCart) => [
       ...prevCart,
       ...allSelectedItems.map((item,index) => ({
         userId: user.userInfo._id,
@@ -97,15 +95,13 @@ const UserSelectCloths = () => {
         quantity: itemQuantities[item._id] || index,
       })),
     ]);
-    console.log(cart)
-
+ 
     setSelectedItems((prev) => ({
       ...prev,
       [selectedCategory]: [],
     }));
   };
-console.log(selectedItems)
-  const handleQuantityChange = (itemId: number, value: number) => {
+   const handleQuantityChange = (itemId: number, value: number) => {
     setItemQuantities((prev) => ({
       ...prev,
       [itemId]: value,

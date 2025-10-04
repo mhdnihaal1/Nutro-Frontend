@@ -1,10 +1,10 @@
-import axios from "axios";
+// import axios from "axios";
 import Api from "../services/axios";
 import adminRoute from "../services/endPoints/adminEndpoints";
 import errorHandle from "./error";
 
 interface Map {
-  _id:string ;
+  _id: string;
   sl_no: string;
   place: string;
   pincode: string;
@@ -16,12 +16,12 @@ interface IMap {
   pincode: string;
   latitude_longitude: [number, number];
 }
-interface adminFormData {
-  name?: string;
-  email?: string;
-  mobile?: string;
-  password?: string;
-}
+// interface adminFormData {
+//   name?: string;
+//   email?: string;
+//   mobile?: string;
+//   password?: string;
+// }
 
 interface loginData {
   email?: string;
@@ -30,7 +30,7 @@ interface loginData {
 interface Agents {
   name: string;
   email: string;
-  password:string;
+  password: string;
   phone: string;
 }
 
@@ -45,15 +45,13 @@ interface IClothItem {
   category: string;
   icon: number[];
   prices: IPrice;
-
 }
 
 interface IOffer {
   name: string;
   price: number;
-  expirationDate:Date;
+  expirationDate: Date;
   isActive: boolean;
- 
 }
 
 interface IPrice {
@@ -61,7 +59,6 @@ interface IPrice {
   wash: number;
   iron: number;
 }
-
 
 // interface ChangePasswordResponse {
 //   status: number;
@@ -77,11 +74,6 @@ type Agent = {
   map: string;
 };
 
-
-
-
-
-
 export const login = async (adminData: loginData) => {
   try {
     const response = await Api.post(adminRoute.login, adminData);
@@ -91,7 +83,6 @@ export const login = async (adminData: loginData) => {
     return errorHandle(err);
   }
 };
-
 
 export const addAgent = async (agentData: Agents) => {
   try {
@@ -103,7 +94,6 @@ export const addAgent = async (agentData: Agents) => {
   }
 };
 
-
 export const getAgents = async () => {
   try {
     const response = await Api.get(adminRoute.getAgents);
@@ -113,7 +103,6 @@ export const getAgents = async () => {
     return errorHandle(err);
   }
 };
-
 
 export const getMaps = async () => {
   try {
@@ -132,9 +121,8 @@ export const getItems = async () => {
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
-  } 
+  }
 };
-
 
 export const getOffers = async () => {
   try {
@@ -143,191 +131,185 @@ export const getOffers = async () => {
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
-  } 
+  }
 };
-
 
 export const addClothItem = async (itemData: IClothItem) => {
   try {
-    const response = await Api.post(adminRoute.addClothItem , itemData);
+    const response = await Api.post(adminRoute.addClothItem, itemData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
 export const addOffer = async (offerData: IOffer) => {
   try {
-    const response = await Api.post(adminRoute.addOffers , offerData);
+    const response = await Api.post(adminRoute.addOffers, offerData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
-
+};
 
 export const getOrders = async () => {
   try {
-    const response = await Api.get(adminRoute.getOrders );
+    const response = await Api.get(adminRoute.getOrders);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
-
+};
 
 export const getUsers = async () => {
   try {
-    const response = await Api.get(adminRoute.getUsers );
+    const response = await Api.get(adminRoute.getUsers);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-export const addMap = async (mapData:IMap) => {
+export const addMap = async (mapData: IMap) => {
   try {
-    const response = await Api.post(adminRoute.addMap ,mapData );
+    const response = await Api.post(adminRoute.addMap, mapData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-export const deleteMap = async (_id:string) => {
+export const deleteMap = async (_id: string) => {
   try {
-    const response = await Api.post(adminRoute.deleteMap ,{id:_id} );
+    const response = await Api.post(adminRoute.deleteMap, { id: _id });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-export const editMap = async (newMap:Map) => {
+export const editMap = async (newMap: Map) => {
   try {
-    const response = await Api.post(adminRoute.editMap ,{newMap:newMap} );
+    const response = await Api.post(adminRoute.editMap, { newMap: newMap });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-export const deleteItem = async (_id:string) => {
+export const deleteItem = async (_id: string) => {
   try {
-    const response = await Api.post(adminRoute.deleteItem ,{id:_id} );
+    const response = await Api.post(adminRoute.deleteItem, { id: _id });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-
-export const deleteOffer = async (_id:string) => {
+export const deleteOffer = async (_id: string) => {
   try {
-    const response = await Api.post(adminRoute.deleteOffer ,{id:_id} );
+    const response = await Api.post(adminRoute.deleteOffer, { id: _id });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-export const UserStatus = async (_id:string) => {
+export const UserStatus = async (_id: string) => {
   try {
-    const response = await Api.post(adminRoute.UserStatus ,{id:_id} );
+    const response = await Api.post(adminRoute.UserStatus, { id: _id });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-export const agentStatus = async (_id:string) => {
+export const agentStatus = async (_id: string) => {
   try {
-    const response = await Api.post(adminRoute.agentStatus ,{id:_id} );
+    const response = await Api.post(adminRoute.agentStatus, { id: _id });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-export const editAgent = async (agentData:Agent) => {
+export const editAgent = async (agentData: Agent) => {
   try {
-    const response = await Api.post(adminRoute.editAgent ,agentData );
+    const response = await Api.post(adminRoute.editAgent, agentData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-export const editClothItem = async (itemData:IClothItem) => {
+export const editClothItem = async (itemData: IClothItem) => {
   try {
-    const response = await Api.post(adminRoute.editClothItem ,itemData );
+    const response = await Api.post(adminRoute.editClothItem, itemData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-export const editOffer = async (offerData:IOffer) => {
+export const editOffer = async (offerData: IOffer) => {
   try {
-    const response = await Api.post(adminRoute.editOffer ,offerData );
+    const response = await Api.post(adminRoute.editOffer, offerData);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
-
-
+};
 
 export const getConcerns = async () => {
   try {
-    const response = await Api.get(adminRoute.getConcerns );
+    const response = await Api.get(adminRoute.getConcerns);
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-export const sendReply = async (concernId :string , userId:string , replyTextr:string) => {
+export const sendReply = async (
+  concernId: string,
+  userId: string,
+  replyTextr: string
+) => {
   try {
-    const response = await Api.post(adminRoute.sendReply ,{concernId :concernId , userId:userId , replyTextr:replyTextr} ); 
+    const response = await Api.post(adminRoute.sendReply, {
+      concernId: concernId,
+      userId: userId,
+      replyTextr: replyTextr,
+    });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};
 
-
-
-
-export const deleteConcern = async (concernId:string) => {
+export const deleteConcern = async (concernId: string) => {
   try {
-    const response = await Api.post(adminRoute.deleteConcern ,{concernId:concernId} ); 
+    const response = await Api.post(adminRoute.deleteConcern, {
+      concernId: concernId,
+    });
     return response;
   } catch (error) {
     const err: Error = error as Error;
     return errorHandle(err);
   }
-}
+};

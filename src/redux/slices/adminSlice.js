@@ -2,20 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const storedAdminInfo = localStorage.getItem("adminInfo");
 
-
 const getStoredAdminInfo = () => {
-    const storedAdminInfo = localStorage.getItem("adminInfo");
-    try {
-        return storedAdminInfo ? JSON.parse(storedAdminInfo) : null;
-    } catch (error) {
-        console.log('Error parsing stored admin info:', error);
-        localStorage.removeItem('adminInfo');
-        return null;
-    }
+  const storedAdminInfo = localStorage.getItem("adminInfo");
+  try {
+    return storedAdminInfo ? JSON.parse(storedAdminInfo) : null;
+  } catch (error) {
+    console.log("Error parsing stored admin info:", error);
+    localStorage.removeItem("adminInfo");
+    return null;
+  }
 };
 
 const initialState = {
-  adminInfo:getStoredAdminInfo(),
+  adminInfo: getStoredAdminInfo(),
 };
 
 const adminAuthSlice = createSlice({

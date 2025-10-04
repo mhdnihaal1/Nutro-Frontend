@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CardProps {
   title: string;
@@ -7,7 +7,12 @@ interface CardProps {
   className?: string; // To add additional styling if needed
 }
 
-const Card: React.FC<CardProps> = ({ title, description, children, className }) => {
+const Card: React.FC<CardProps> = ({
+  title,
+  description,
+  children,
+  className,
+}) => {
   return (
     <div
       className={`bg-white shadow-md rounded-lg p-4 border border-gray-200 ${className}`}
